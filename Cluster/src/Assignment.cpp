@@ -28,7 +28,7 @@ void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Poin
 				second_cluster = Cluster_Table[j];
 			}
 		} 
-		Info temp(Points[i],point_id[i],second_cluster);
+		Info temp(Points[i],point_id[i],min_dist,second_cluster);
 		cluster[cluster_id]->InsertPoint(temp);
 	}
 }

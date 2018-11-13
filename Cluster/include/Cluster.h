@@ -8,6 +8,7 @@
 class Cluster
 {
 	std::vector<Info> Array; 
+	std::vector<double> cluster_point;
 	int Cluster_id;
 
 public:
@@ -17,6 +18,9 @@ public:
 	};
 	~Cluster(){};
 	void InsertPoint(Info);
+	int get_ClusterSize();
+	void set_clusterPoint(std::vector<double>);
+	std::vector<Info>& get_array();
 };
 
 #endif
