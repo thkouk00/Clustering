@@ -8,7 +8,7 @@
 #include "../include/Point_Info.h"
 #include "../LSH/include/main_func.h"
 
-void Lloyds_Assignment(Cluster**, std::vector<std::vector<double>>&, std::vector<std::string>&, std::vector<int>&);
+void Lloyds_Assignment(Cluster **, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, std::vector<std::string>&);
 void LSH_Assignment(Cluster**, std::vector<std::vector<double>>&, std::vector<std::string>&, std::vector<int>&, int&, int&, int&);
 void Hypercube_Assignment();
 

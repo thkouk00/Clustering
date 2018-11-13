@@ -1,9 +1,16 @@
 #include "../include/Assignment.h"
 
-void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::string>& point_id,std::vector<int>& Cluster_Table)
+void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id)
 {
+
+	//clean structure
+	for (int i=0;i<Cluster_Table.size();i++)
+	{
+		cluster[i]->clear_structure();
+	}
+
 	double dist;
-	int cluster_id;
+	int cluster_pos;
 	int second_cluster;
 	for (int i=0;i<Points.size();i++)
 	{
@@ -12,24 +19,25 @@ void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Poin
 		
 		for (int j=0;j<Cluster_Table.size();j++)
 		{
-			if (Points[i] == Points[j])
+			if (Points[i] == Cluster_Table[j])
 				break;
-			dist = Euclidean_Distance(Points[i], Points[Cluster_Table[j]]);
+			// dist = Euclidean_Distance(Points[i], Points[Cluster_Table[j]]);
+			dist = Euclidean_Distance(Points[i], Cluster_Table[j]);
 			if (min_dist > dist)
 			{
 				second_best = min_dist;
 				min_dist = dist;
-				second_cluster = cluster_id;
-				cluster_id = Cluster_Table[j];
+				second_cluster = cluster_pos;
+				cluster_pos = j;
 			}
 			else if (second_best > dist)
 			{
 				second_best = dist;
-				second_cluster = Cluster_Table[j];
+				second_cluster = j;
 			}
 		} 
-		Info temp(Points[i],point_id[i],min_dist,second_cluster);
-		cluster[cluster_id]->InsertPoint(temp);
+		Info temp(Points[i],point_id[i],i,second_cluster,min_dist);
+		cluster[cluster_pos]->InsertPoint(temp);
 	}
 }
 
