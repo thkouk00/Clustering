@@ -11,11 +11,11 @@
 #include <sstream>
 #include <cmath>
 #include <bits/stdc++.h>
-#include "../include/HashTable.h"
-#include "../include/normal_distr.h"
-#include "../include/NN_search.h"
-#include "../include/Range_search.h"
-#include "../../include/Cluster.h"
+#include "HashTable.h"
+#include "normal_distr.h"
+#include "NN_search.h"
+#include "Range_search.h"
+#include "../cluster/Cluster.h"
 
 void storeDataset(std::vector<std::vector<double>>&, std::vector<std::string>&,char *, int&, bool &, double &);
 void search_neighbors(std::map<std::vector<double>, MapNode>&, HashTable**, std::vector<std::string>&, std::vector<std::vector<double>>&, int&, int&, int&, int&, bool);

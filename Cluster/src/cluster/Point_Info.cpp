@@ -1,9 +1,6 @@
-#include "../include/Point_Info.h"
+#include "../../include/cluster/Point_Info.h"
 
-Info::Info(std::vector<double>& point, std::string id, int pos_id,int second_best, double dist): Point(point), Point_id(id), Pos_id(pos_id), second_best_cluster(second_best), distance(dist)
-{
-
-}
+Info::Info(std::vector<double>& point, std::string id, int pos_id,int second_best, double dist): Point(point), Point_id(id), Pos_id(pos_id), second_best_cluster(second_best), distance(dist){}
 
 std::vector<double>& Info::get_point()
 {

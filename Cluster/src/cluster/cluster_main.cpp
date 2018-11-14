@@ -1,17 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "../include/Initialization.h"
+#include "../../include/cluster/Initialization.h"
 
 using namespace std;
 
 int main(int argc, char const *argv[])
 {
+	Cluster** cluster;
 	//diavasma arxeion
 	int num_of_lines = 20;
 	int k = 5;
 	std::vector<int> Cluster_Table;
-	Random_Initialization(k,num_of_lines,Cluster_Table);
+	// Random_Initialization(cluster,k,num_of_lines,Cluster_Table);
 
 	std::vector<int>::iterator it;
 	for (it = Cluster_Table.begin();it!= Cluster_Table.end();it++)
@@ -33,7 +34,7 @@ int main(int argc, char const *argv[])
 		Points.push_back(v);
 		v.clear();
 	}
-	K_means_plusplus(k, num_of_lines, Cluster_Table, Points);
+	// K_means_plusplus(cluster,k, num_of_lines, Cluster_Table, Points);
 
 	return 0;
 }

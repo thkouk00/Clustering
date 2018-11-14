@@ -3,7 +3,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
-#include "../include/Point_Info.h"
+#include "Point_Info.h"
 
 class Cluster
 {
@@ -29,6 +29,19 @@ public:
 	void set_clusterId(int&);
 	void set_info(std::vector<double>, int, double);
 	void clear_structure();
+};
+
+class MapNode
+{
+	int cluster_pos;
+	double Radius;
+	double distance;
+public:
+	MapNode(){};
+	~MapNode(){};
+	void set_info(int, double, double);
+	void get_all(int&, double&, double&);
+	
 };
 
 #endif

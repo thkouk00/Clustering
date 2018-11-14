@@ -7,8 +7,8 @@
 #include <chrono>	//seed 
 #include <algorithm> //find
 #include <math.h>	//pow
-#include "../LSH/include/Distance.h"
-#include "../include/Cluster.h"
+#include "Cluster.h"
+#include "../LSH/Distance.h"
 
 void Random_Initialization(Cluster **, std::vector<std::vector<double>>&, int&, int&);
 void K_means_plusplus(Cluster **, std::vector<std::vector<double>>&, int&, int&);

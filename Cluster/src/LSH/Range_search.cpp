@@ -1,4 +1,4 @@
-#include "../include/Range_search.h"
+#include "../../include/LSH/Range_search.h"
 using namespace std;
 
 void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<double> &query, std::vector<int> &fi, int &L, int &k, double &R, bool Euclidean, bool& Stop, int& cluster_pos)

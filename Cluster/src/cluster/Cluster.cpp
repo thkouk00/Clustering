@@ -1,4 +1,4 @@
-#include "../include/Cluster.h"
+#include "../../include/cluster/Cluster.h"
 
 void Cluster::InsertPoint(Info point)
 {
@@ -50,4 +50,19 @@ void Cluster::clear_structure()
 	}
 	this->Cluster_id = -1;
 	this->cluster_point.clear();
+}
+
+
+void MapNode::set_info(int cluster, double Rad, double dist)
+{
+	this->cluster_pos = cluster;
+	this->Radius = Rad;
+	this->distance = dist;
+}
+void MapNode::get_all(int& cluster_pos, double& rad, double& distance)
+{
+
+	cluster_pos = this->cluster_pos;
+	rad = this->Radius; 
+	distance = this->distance; 
 }

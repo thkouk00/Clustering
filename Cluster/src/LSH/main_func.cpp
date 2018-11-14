@@ -1,4 +1,4 @@
-#include "../include/main_func.h"
+#include "../../include/LSH/main_func.h"
 
 using namespace std;
 
@@ -43,7 +43,46 @@ void Search_Neighbors(Cluster** cluster, std::vector<std::vector<double>>& datas
 	// search neighbors from query_file
 	search_neighbors(assigned_elements, hashTables, id, queryset, L, k, w, number_of_buckets, euclidean_flag);
 
+	std::vector<std::vector<double>>::iterator qit;
+	std::map<std::vector<double>, MapNode>::iterator it;
 	//assign every point to its cluster
+	for (int i=0;i<dataset.size();i++)
+	{
+		//check if point is already assigned
+		it = assigned_elements.find(dataset[i]);
+		if (it != assigned_elements.end())
+			continue;
+		else
+		{
+			//check if point is centroid
+			qit = find(queryset.begin(), queryset.end(), dataset[i]);
+			if (qit != queryset.end())
+				continue;
+			double tmp_dist;
+			double min_distance;
+			int position;
+			//find nearest centroid
+			for (int j=0;j<queryset.size();j++)
+			{
+				tmp_dist = Euclidean_Distance(dataset[i], queryset[j]);
+				if (j == 0)
+				{
+					position = j;
+					min_distance = tmp_dist;
+				}
+				else if (min_distance > tmp_dist)
+				{
+					position = j;
+					min_distance = tmp_dist;
+				}
+
+			}
+			MapNode node;
+			node.set_info(position, 0, min_distance);
+			assigned_elements.insert ( std::pair<std::vector<double>, MapNode>(dataset[i],node) );
+		}
+	}
+
 
 	for (int i=0;i<L;i++)
 		delete hashTables[i];

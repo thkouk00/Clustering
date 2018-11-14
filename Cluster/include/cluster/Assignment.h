@@ -3,13 +3,13 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "../LSH/include/Distance.h"
-#include "../include/Cluster.h"
-#include "../include/Point_Info.h"
-#include "../LSH/include/main_func.h"
+#include "Cluster.h"
+#include "Point_Info.h"
+#include "../LSH/Distance.h"
+#include "../LSH/main_func.h"
 
 void Lloyds_Assignment(Cluster **, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, std::vector<std::string>&);
-void LSH_Assignment(Cluster**, std::vector<std::vector<double>>&, std::vector<std::string>&, std::vector<int>&, int&, int&, int&);
+void LSH_Assignment(Cluster **, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, std::vector<std::string>&, double&, int&, int&, int&);
 void Hypercube_Assignment();
 
 

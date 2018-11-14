@@ -1,4 +1,4 @@
-#include "../include/general_functions.h"
+#include "../../include/LSH/general_functions.h"
 
 using namespace std;
 
@@ -148,7 +148,7 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 		fi.erase(fi.begin(),fi.end());
 	}
 
-
+	
 	cout <<"End of Range Search"<<std::endl;
 }
 

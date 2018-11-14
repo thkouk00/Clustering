@@ -5,13 +5,15 @@
 #include <stdio.h>
 #include <vector>
 #include <list>
+#include <map>
 #include <string.h>
 #include <stdlib.h>
 #include <ctime>
-#include "../include/HashTable.h"
-#include "../include/Buckets.h"
-#include "../include/Distance.h"
-#include "../../include/Cluster.h"
+// #include "../include/HashTable.h"
+#include "HashTable.h"
+#include "Buckets.h"
+#include "Distance.h"
+#include "../cluster/Cluster.h"
 
 //LSH Clustering
 void Range_search(std::map<std::vector<double>, MapNode>&, HashTable**, std::vector<std::vector<int>> &, std::vector<double> &, std::vector<int> &, int &, int &, double &, bool, bool&, int&);

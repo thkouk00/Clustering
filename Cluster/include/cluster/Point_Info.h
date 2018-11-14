@@ -14,7 +14,7 @@ class Info
 	double distance;
 public:
 	Info(std::vector<double>&, std::string, int, int, double);
-	// Info(){};
+	Info();
 	~Info(){};
 	std::vector<double>& get_point();
 	double get_distance();

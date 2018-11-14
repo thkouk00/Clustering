@@ -1,4 +1,4 @@
-#include "../include/Assignment.h"
+#include "../../include/cluster/Assignment.h"
 
 void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id)
 {
@@ -41,8 +41,8 @@ void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Poin
 	}
 }
 
-void LSH_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::string>& point_id, std::vector<int>& Cluster_Table, int& k, int& L, int& w)
+void LSH_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, double& Radius, int& k_lsh, int& L, int& w)
 {
-	char* input_file, *query_file;
-	Search_Neighbors(input_file, query_file, k, L, w);
+	// Search_Neighbors(cluster, Points, Cluster_Table, point_id, k_lsh, L, w);
+	Search_Neighbors(cluster, Points, Cluster_Table, point_id, k_lsh, L, w);
 }

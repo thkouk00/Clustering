@@ -1,4 +1,4 @@
-#include "../include/Distance.h"
+#include "../../include/LSH/Distance.h"
 
 long double Euclidean_Distance(std::vector<double> & A, std::vector<double> &B)
 {
