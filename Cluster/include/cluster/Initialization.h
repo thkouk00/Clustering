@@ -10,7 +10,7 @@
 #include "Cluster.h"
 #include "../LSH/Distance.h"
 
-void Random_Initialization(Cluster **, std::vector<std::vector<double>>&, int&, int&);
-void K_means_plusplus(Cluster **, std::vector<std::vector<double>>&, int&, int&);
+void Random_Initialization(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, int&);
+void K_means_plusplus(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, int&);
 
 #endif

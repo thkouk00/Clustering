@@ -3,11 +3,11 @@
 using namespace std;
 
 
-void Random_Initialization(Cluster **cluster, std::vector<std::vector<double>>& Points,int& k, int& num_of_lines)
+void Random_Initialization(std::vector<std::vector<double>>& Cluster_Table, std::vector<std::vector<double>>& Points,int& k)
 {
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine generator (seed);
-	std::uniform_int_distribution<int> distribution(0,num_of_lines-1);
+	std::uniform_int_distribution<int> distribution(0,Points.size()-1);
 	
 	std::vector<int> vec;	
 	std::vector<int>::iterator it;
@@ -30,107 +30,111 @@ void Random_Initialization(Cluster **cluster, std::vector<std::vector<double>>& 
 			{
 				cout <<"new element "<<rand_center<<std::endl;
 				vec.push_back(rand_center);
-				cluster[i]->set_clusterPoint(Points[rand_center]);
-				cluster[i]->set_clusterId(rand_center);
+				Cluster_Table.push_back(Points[rand_center]);
 				break;
 			}
 		}
 	}
 }
 
-void K_means_plusplus(Cluster **cluster, std::vector<std::vector<double>>& Points, int& k, int& num_of_lines)
+void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vector<std::vector<double>>& Points, int& k)
 {
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine generator (seed);
-	std::uniform_int_distribution<int> distribution(0,num_of_lines-1);
+	int points_size = Points.size();
+	std::uniform_int_distribution<int> distribution(0,points_size-1);
 	
-	int centroid = distribution(generator);
-	std::vector<std::vector<double>> centers;	
+	cout <<"Points_size "<<points_size<<std::endl;;
+	int centroid = distribution(generator);	
 
 	//holds position of clusters in points
-	centers.push_back(Points[centroid]);
-	// Cluster_Table.push_back(centroid);
+	Cluster_Table.push_back(Points[centroid]);
+	cout <<"FIRST CENTROID "<<centroid<<std::endl;
 
 	//holds min dist for every Point
 	std::vector<double> min_distance;
 	std::vector<int> point_pos;
-	std::vector<int> id;
+	std::vector<double> max_distance;
+	std::vector<std::vector<double>>::iterator it;
+	
+	std::vector<double> P;
+	//P[0] = 0.0;
+	P.push_back(0);
 	//loop until all centroids are collected
 	for (int i=0;i<k-1;i++)
 	{
-		id.push_back(centroid);
-		double dist;
-		double max_dist = -1;
-		std::vector<double> P;
-		//for every point loop to find min dist among every cluster
-		for (int j=0;j<num_of_lines;j++)
+		//for every point find min_distance
+		for (int j=0;j<Points.size();j++)	
 		{
-			if(j == 0)
-				P.push_back(0.0);
-
-			bool flag = 0;
-			for (int y=0; y<centers.size(); y++)
-			{
-				//if Point[j] is center go to next loop
-				if (Points[j] == centers[y])
-				{
-					flag = 1;
-					break;
-				}
-			}
-			//Point is centroid
-			if (flag)
+			// current point is centroid
+			it = find(Cluster_Table.begin(), Cluster_Table.end(), Points[j]);
+			if (it != Cluster_Table.end())
 				continue;
 
-			//find dist between point and cluster , store min dist only
-			dist = Euclidean_Distance(Points[j], Points[centroid]);
-			if (i==0)
-				min_distance.push_back(dist);
-			else if (min_distance[j] > dist)
-				min_distance[j] = dist;		
-			//store max_dist in order to normalize result
-			if (max_dist < dist)
-				max_dist = dist;
-
-			//store position of elements that have been examined
-			point_pos.push_back(j);
-			double prob = 0;
-			//calculate partial sums
-			for (int y = 0; y<point_pos.size();y++)
+			double dist = Euclidean_Distance(Points[j], Points[centroid]);
+			if ( point_pos.size() < Points.size()-Cluster_Table.size() )
 			{
-				prob += pow(min_distance[y],2)/max_dist; 
+				point_pos.push_back(j);
+				min_distance.push_back(dist);
+				max_distance.push_back(dist);
 			}
-			P[j+1] = prob;
-		
+			else
+			{
+				if (min_distance[j] > dist)
+					min_distance[j] = dist;
+				
+				if (max_distance[j] < dist)
+					max_distance[j] = dist;
+			}
 		}
-		// //calculate every point's probability in order to be new centroid
-		// for (int j=1; j<=num_of_lines; j++)
-		// {
-		// 	P[j] += pow(min_distance[j],2);
-		// 	// double prob = P[j] + (pow(min_distance[j], 2)/pow(max_dist, 2));
-		// 	// P.push_back(prob);
-		// }
 
-		//find new centroid using binary search
-		std::uniform_int_distribution<int> distr(0,P[P.size()-1]);
+		for (int j=0;j<point_pos.size();j++)
+		{
+			double prob = 0;
+			//partial sum for every element in vector
+			for (int y=0;y<=j;y++)
+				prob += pow(min_distance[y], 2);
+			prob = prob / max_distance[j];
+			P.push_back(P[j] + prob);
+			cout <<P[j+1]<<std::endl;
+		}
+		cout <<"---------------------------------"<<std::endl;
+
+		// std::uniform_real_distribution<double> distr(0,P[P.size()-1]);
+		std::uniform_real_distribution<double> distr(0,P[Points.size()-Cluster_Table.size()]);
 		double x = distr(generator);
 		int upper = P.size();
 		int lower = 1;
-		int mid = lower + (upper-lower)/2;
+		int mid = lower + ((upper-lower)/2);
+		cout <<"X is "<<x<<std::endl;
+		cout <<"Mid before while "<<mid<<" upper "<<upper<<" and lower "<<lower<<std::endl;
+		cout <<"Bound "<<P[Points.size()-Cluster_Table.size()]<<std::endl;;
 		while(1)
 		{
 			if (P[mid] == x)
 			{
-				// centroid = mid;
-				centroid = point_pos[mid];
+				centroid = point_pos[mid-1];
+				cout <<"NEW ELEMENT P[mid]==x -> "<<mid<<" and centroid "<<centroid<<std::endl;
+
+				//delete centroid from  point vector
+				point_pos.erase(point_pos.begin() + (mid - 1));
+				min_distance.erase(min_distance.begin()+(mid - 1));
+				max_distance.erase(max_distance.begin()+(mid - 1));
+				
 				break;
 			}
 			else if (P[mid] > x)
 			{
 				if (mid > 0 && P[mid-1] < x)
 				{
-					// centroid = mid;
-					centroid = point_pos[mid];
+					centroid = point_pos[mid-1];
+					cout <<"NEW ELEMENT second case "<<mid<<" and centroid "<<centroid<<std::endl;
+					
+					//delete centroid from  point vector
+					point_pos.erase(point_pos.begin() + (mid - 1));
+					min_distance.erase(min_distance.begin()+(mid - 1));
+					max_distance.erase(max_distance.begin()+(mid - 1));
+					
 					break;
 				}	
 				else
@@ -145,16 +149,67 @@ void K_means_plusplus(Cluster **cluster, std::vector<std::vector<double>>& Point
 				mid = lower + (upper-lower)/2; 
 				if (mid == lower)
 					mid++;
-			}
-		}
-		centers.push_back(Points[centroid]);
-		// Cluster_Table.push_back(centroid);
-	}
 
-	for (int i=0;i<k;i++)
-	{
-		cluster[i]->set_clusterPoint(centers[i]);
-		cluster[i]->set_clusterId(id[i]);
+				cout <<"New mid "<<mid<<" upper "<<upper<<" lower "<<lower<<std::endl;
+			}	
+		}
+		Cluster_Table.push_back(Points[centroid]);
 	}
+	
 	//print clusters to see the actual centroids
+	for (int i=0;i<Cluster_Table.size();i++)
+	{
+		std::vector<double> v = Cluster_Table[i];
+		for (int j=0;j<v.size();j++)
+			cout <<v[j]<<' ';
+		cout <<std::endl;
+	}
 }
+
+
+
+
+// std::uniform_real_distribution<double> distr(0,P[P.size()-1]);
+// double x = distr(generator);
+// int upper = P.size();
+// int lower = 1;
+// int mid = lower + ((upper-lower)/2);
+// cout <<"X is "<<x<<std::endl;
+// cout <<"Mid before while "<<mid<<" upper "<<upper<<" and lower "<<lower<<std::endl;
+// while(1)
+// {
+// 	if (P[mid] == x)
+// 	{
+// 		// centroid = mid;
+// 		cout <<"NEW ELEMENT P[mid]==x -> "<<mid<<std::endl;
+// 		centroid = point_pos[mid];
+// 		break;
+// 	}
+// 	else if (P[mid] > x)
+// 	{
+// 		if (mid > 0 && P[mid-1] < x)
+// 		{
+// 			// centroid = mid;
+// 			cout <<"NEW ELEMENT second case "<<mid<<std::endl;
+// 			centroid = point_pos[mid];
+// 			point_pos.erase(point_pos.begin() + mid);
+// 			min_distance.erase(min_distance.begin()+mid);
+// 			max_vec.erase(max_vec.begin()+mid);
+// 			break;
+// 		}	
+// 		else
+// 		{
+// 			upper = mid;
+// 			mid = lower + (upper-lower)/2; 
+// 		}
+// 	} 
+// 	else
+// 	{
+// 		lower = mid;
+// 		mid = lower + (upper-lower)/2; 
+// 		if (mid == lower)
+// 			mid++;
+
+// 		cout <<"New mid "<<mid<<" upper "<<upper<<" lower "<<lower<<std::endl;
+// 	}
+// }

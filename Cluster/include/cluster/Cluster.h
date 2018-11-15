@@ -36,6 +36,7 @@ class MapNode
 	int cluster_pos;
 	double Radius;
 	double distance;
+	
 public:
 	MapNode(){};
 	~MapNode(){};
