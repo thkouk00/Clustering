@@ -20,8 +20,10 @@ public:
 	double get_distance();
 	int get_Pos_Id();
 	std::string get_Point_Id();
-	void set_point();
-	void set_distance();
+	void set_point(std::vector<double>&);
+	void set_distance(double&);
+	void set_pointId(std::string);
+	void set_all(std::vector<double>&, std::string, int&, int&, double&);
 	void clear_info();
 };
 

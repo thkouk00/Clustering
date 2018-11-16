@@ -7,6 +7,8 @@ void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Poin
 	for (int i=0;i<Cluster_Table.size();i++)
 	{
 		cluster[i]->clear_structure();
+		std::vector<Info> v = cluster[i]->get_array();
+		std::cout <<"SSIZEARRAY "<<v.size()<<" and Cluster "<<Cluster_Table[i].size()<<std::endl;
 	}
 
 	double dist;
@@ -17,11 +19,14 @@ void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Poin
 		double min_dist = 9999999;
 		double second_best = 9999999;
 		
+		//check if point is centroid
+		std::vector<std::vector<double>>::iterator it;
+		it = find(Cluster_Table.begin(), Cluster_Table.end(), Points[i]);
+		if (it != Cluster_Table.end())
+			continue;
+		
 		for (int j=0;j<Cluster_Table.size();j++)
 		{
-			if (Points[i] == Cluster_Table[j])
-				break;
-			// dist = Euclidean_Distance(Points[i], Points[Cluster_Table[j]]);
 			dist = Euclidean_Distance(Points[i], Cluster_Table[j]);
 			if (min_dist > dist)
 			{
@@ -41,8 +46,13 @@ void Lloyds_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Poin
 	}
 }
 
-void LSH_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, double& Radius, int& k_lsh, int& L, int& w)
+void LSH_Assignment(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, int& k_lsh, int& L, int& w)
 {
+	//clean structure
+	for (int i=0;i<Cluster_Table.size();i++)
+	{
+		cluster[i]->clear_structure();
+	}
 	// Search_Neighbors(cluster, Points, Cluster_Table, point_id, k_lsh, L, w);
 	Search_Neighbors(cluster, Points, Cluster_Table, point_id, k_lsh, L, w);
 }

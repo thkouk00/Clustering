@@ -22,6 +22,28 @@ std::string Info::get_Point_Id()
 	return this->Point_id;
 }
 
+void Info::set_point(std::vector<double>& point)
+{
+	this->Point = point;
+}
+
+void Info::set_distance(double& dist)
+{
+	this->distance = dist;
+}
+
+void Info::set_pointId(std::string id)
+{
+	this->Point_id = id;
+}
+
+void Info::set_all(std::vector<double>& point, std::string point_id, int& point_pos, int& second_best_cluster, double& dist)
+{
+	this->Point = point;
+	this->Point_id = point_id;
+	this->distance = dist;
+}
+
 void Info::clear_info()
 {
 	this->Point.clear();

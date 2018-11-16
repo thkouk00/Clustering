@@ -6,7 +6,10 @@
 #include <stdlib.h>
 #include <fstream>
 #include <sstream>
+#include "../../include/cluster/Cluster.h"
 #include "../../include/cluster/Initialization.h"
+#include "../../include/cluster/Assignment.h"
+#include "../../include/cluster/Update.h"
 
 using namespace std;
 
@@ -119,7 +122,7 @@ int main(int argc, char const *argv[])
 		Points.push_back(tempv);
 		tempv.clear();
 	}
-	cout <<"AFTER"<<std::endl;
+	cout <<"AFTER size "<<Points.size()<<std::endl;
 
 	std::vector<std::vector<double>> Cluster_Table;
 	int k = 3;
@@ -132,12 +135,79 @@ int main(int argc, char const *argv[])
 	// 	cout <<std::endl;
 	// }
 	
-	Random_Initialization(Cluster_Table, Points, k);
-	Cluster_Table.clear();
+	// Random_Initialization(Cluster_Table, Points, k);
+	// Cluster_Table.clear();
 	K_means_plusplus(Cluster_Table, Points, k);
-	
+	Cluster** cluster = new Cluster*[Cluster_Table.size()];
+	for (int i=0;i<Cluster_Table.size();i++)
+		cluster[i] = new Cluster;
 
-	// K_means_plusplus(cluster,k, num_of_lines, Cluster_Table, Points);
+	int k_lsh = 4;
+	int L = 5;
+	int w = 300;
+
+	bool flag = 1;
+	while (flag)
+	{		
+		// cout <<"LOOP "<<loop<<std::endl;
+		Lloyds_Assignment(cluster, Points, Cluster_Table, id);
+		// LSH_Assignment(cluster, Points, Cluster_Table, id, k_lsh, L, w);
+		// PAM_improved(cluster, Points, Cluster_Table, id);
+		
+		for (int i=0;i<Cluster_Table.size();i++)
+		{
+			cout <<"********************BEFORE PAM*************************"<<std::endl;
+			cout <<"CLUSTER TABLE "<<Cluster_Table.size()<<std::endl;
+			std::vector<double> P = Cluster_Table[i];
+			std::vector<Info> v = cluster[i]->get_array();
+			cout <<"Cluster "<<i<<" is: "<<std::endl;
+			for (int j=0;j<P.size();j++)
+				cout <<P[j]<<' ';
+			cout <<std::endl;
+
+			cout <<"**ASSIGNED POINTS**"<<std::endl;	
+			for (int j=0;j<v.size();j++)
+			{
+				Info info = v[j];
+				std::vector<double> point;
+				int id;
+				point = info.get_point();
+				id = info.get_Pos_Id();
+				for (int l=0;l<point.size();l++)
+					cout <<point[l]<<' ';
+				cout <<"and point id "<<id<<std::endl;
+			}
+			cout <<"------------------------------------------------------"<<std::endl;
+		}
+		PAM_improved(cluster, Points, Cluster_Table, id,flag);
+		cout <<"********************AFTER PAM*************************"<<std::endl;
+		cout <<"CLUSTER TABLE "<<Cluster_Table.size()<<std::endl;
+		for (int i=0;i<Cluster_Table.size();i++)
+		{
+			cout <<"------------------------------------------------------"<<std::endl;
+			cout <<"Cluster "<<i<<" is: "<<std::endl;
+			std::vector<double> P = Cluster_Table[i];
+			for (int j=0;j<P.size();j++)
+				cout <<P[j]<<' ';
+			cout <<std::endl;
+			std::vector<Info> v = cluster[i]->get_array();
+			cout <<"**ASSIGNED POINTS**"<<std::endl;	
+			for (int j=0;j<v.size();j++)
+			{
+				Info info = v[j];
+				std::vector<double> point;
+				int id;
+				point = info.get_point();
+				id = info.get_Pos_Id();
+				for (int l=0;l<point.size();l++)
+					cout <<point[l]<<' ';
+				cout <<"and point id "<<id<<std::endl;
+			}
+			cout <<"------------------------------------------------------"<<std::endl;
+		}
+		
+	}
+	
 
 	return 0;
 }

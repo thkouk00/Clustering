@@ -1,7 +1,7 @@
 #include "../../include/LSH/Range_search.h"
 using namespace std;
 
-void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<double> &query, std::vector<int> &fi, int &L, int &k, double &R, bool Euclidean, bool& Stop, int& cluster_pos)
+void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<double> &query, std::vector<std::vector<double>> &queryset, std::vector<int> &fi, int &L, int &k, double &R, bool Euclidean, bool& Stop, int& cluster_pos)
 {
 	int tmpfi;
 	long double distance;
@@ -27,12 +27,18 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 		if (bucket == NULL)
 			continue;
 		
+		std::vector<std::vector<double>>::iterator Qit;
 		list<Node> List = bucket->access_list();
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
 			bool g_flag = 1;
 			std::vector<double> p(it->get_p());  
 			
+			//point is centroid
+			Qit = find(queryset.begin(), queryset.end(), p);
+			if (Qit != queryset.end())
+				continue;
+
 			if (Euclidean)
 			{
 				// find distance for trueNN_neighbor

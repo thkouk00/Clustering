@@ -12,7 +12,7 @@ void Random_Initialization(std::vector<std::vector<double>>& Cluster_Table, std:
 	std::vector<int> vec;	
 	std::vector<int>::iterator it;
 
-	int rand_center = -1;
+	int rand_center;
 	for (int i=0;i<k;i++)
 	{
 		while (1)

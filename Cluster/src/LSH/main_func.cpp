@@ -51,7 +51,18 @@ void Search_Neighbors(Cluster** cluster, std::vector<std::vector<double>>& datas
 		//check if point is already assigned
 		it = assigned_elements.find(dataset[i]);
 		if (it != assigned_elements.end())
+		{
+			int c_pos;
+			double rad;
+			double Dist;
+			
+			it->second.get_all(c_pos,rad,Dist);
+			int second_best_cluster_temp = 0;
+			Info info(dataset[i],id[i],i,second_best_cluster_temp,Dist);
+			cluster[c_pos]->InsertPoint(info);
+			cout <<"****WAS HERE****"<<std::endl;
 			continue;
+		}
 		else
 		{
 			//check if point is centroid
@@ -80,6 +91,10 @@ void Search_Neighbors(Cluster** cluster, std::vector<std::vector<double>>& datas
 			MapNode node;
 			node.set_info(position, 0, min_distance);
 			assigned_elements.insert ( std::pair<std::vector<double>, MapNode>(dataset[i],node) );
+			
+			int second_best_cluster_temp = 0;
+			Info info(dataset[i],id[i],i,second_best_cluster_temp,min_distance);
+			cluster[position]->InsertPoint(info);
 		}
 	}
 
