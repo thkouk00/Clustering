@@ -105,7 +105,7 @@ int main(int argc, char const *argv[])
 	int counter = 0;
 	while (getline(file, line))
 	{
-		cout <<line<<std::endl;
+		// cout <<line<<std::endl;
 		std::istringstream ss(line);
 		std::string token;
 		// int id ;
@@ -116,7 +116,7 @@ int main(int argc, char const *argv[])
 		{
 			tempv.push_back(stod(token));
 			
-			cout <<tempv[counter]<<std::endl;
+			// cout <<tempv[counter]<<std::endl;
 			counter++;	
 		}
 		Points.push_back(tempv);
@@ -146,14 +146,23 @@ int main(int argc, char const *argv[])
 	int L = 5;
 	int w = 300;
 
+	Cluster **previous_cluster_setup = cluster; 
 	bool flag = 1;
+	int max_iter = 0;
+	// while (flag && max_iter < 3)
 	while (flag)
 	{		
 		// cout <<"LOOP "<<loop<<std::endl;
 		Lloyds_Assignment(cluster, Points, Cluster_Table, id);
 		// LSH_Assignment(cluster, Points, Cluster_Table, id, k_lsh, L, w);
-		// PAM_improved(cluster, Points, Cluster_Table, id);
 		
+		// if (loops > 0 && k_meansFlag)
+		// {
+		// 	for (int i=0;i<Cluster_Table;i++)
+		// 	{
+		// 		if ()
+		// 	}
+		// }
 		for (int i=0;i<Cluster_Table.size();i++)
 		{
 			cout <<"********************BEFORE PAM*************************"<<std::endl;
@@ -162,7 +171,7 @@ int main(int argc, char const *argv[])
 			std::vector<Info> v = cluster[i]->get_array();
 			cout <<"Cluster "<<i<<" is: "<<std::endl;
 			for (int j=0;j<P.size();j++)
-				cout <<P[j]<<' ';
+				cout <<P[j]<<',';
 			cout <<std::endl;
 
 			cout <<"**ASSIGNED POINTS**"<<std::endl;	
@@ -174,21 +183,26 @@ int main(int argc, char const *argv[])
 				point = info.get_point();
 				id = info.get_Pos_Id();
 				for (int l=0;l<point.size();l++)
-					cout <<point[l]<<' ';
-				cout <<"and point id "<<id<<std::endl;
+					cout <<point[l]<<',';
+				cout <<" and point id "<<id<<std::endl;
 			}
 			cout <<"------------------------------------------------------"<<std::endl;
 		}
 		PAM_improved(cluster, Points, Cluster_Table, id,flag);
+		// k_means(cluster, Points, Cluster_Table, id);
 		cout <<"********************AFTER PAM*************************"<<std::endl;
 		cout <<"CLUSTER TABLE "<<Cluster_Table.size()<<std::endl;
 		for (int i=0;i<Cluster_Table.size();i++)
 		{
+			// std::vector<std::vector<double>>::iterator iterat;
+			// iterat = find(Points.begin(),Points.end(),Cluster_Table[i]);
+			// if (iterat != Points.end())
+			// 	cout <<"BRETHIKE MISTI MOY"<<std::endl;
 			cout <<"------------------------------------------------------"<<std::endl;
 			cout <<"Cluster "<<i<<" is: "<<std::endl;
 			std::vector<double> P = Cluster_Table[i];
 			for (int j=0;j<P.size();j++)
-				cout <<P[j]<<' ';
+				cout <<P[j]<<',';
 			cout <<std::endl;
 			std::vector<Info> v = cluster[i]->get_array();
 			cout <<"**ASSIGNED POINTS**"<<std::endl;	
@@ -198,14 +212,18 @@ int main(int argc, char const *argv[])
 				std::vector<double> point;
 				int id;
 				point = info.get_point();
+				std::vector<std::vector<double>>::iterator iterat;
+				iterat = find(Points.begin(),Points.end(),point);
+				if (iterat != Points.end())
+					cout <<"BRETHIKE MISTI MOY"<<std::endl;
 				id = info.get_Pos_Id();
 				for (int l=0;l<point.size();l++)
-					cout <<point[l]<<' ';
-				cout <<"and point id "<<id<<std::endl;
+					cout <<point[l]<<',';
+				cout <<" and point id "<<id<<std::endl;
 			}
 			cout <<"------------------------------------------------------"<<std::endl;
 		}
-		
+		max_iter++;
 	}
 	
 

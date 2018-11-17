@@ -76,12 +76,12 @@ void PAM_improved(Cluster **cluster, std::vector<std::vector<double>>& Points, s
 			cout <<std::endl;
 			cout <<"----CLUSTER BEFORE----"<<std::endl;
 			for (int y=0;y<Cluster_Table[i].size();y++)
-				cout <<Cluster_Table[i][y]<<' ';
+				cout <<Cluster_Table[i][y]<<',';
 			cout <<std::endl;
 			Cluster_Table[i] = info_array[min_index].get_point();
 			cout <<"----CLUSTER AFTER----"<<std::endl;
 			for (int y=0;y<Cluster_Table[i].size();y++)
-				cout <<Cluster_Table[i][y]<<' ';
+				cout <<Cluster_Table[i][y]<<',';
 			cout <<std::endl;
 			cout <<std::endl;
 			flag = 0;
@@ -92,45 +92,46 @@ void PAM_improved(Cluster **cluster, std::vector<std::vector<double>>& Points, s
 
 void k_means(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id)
 {
-	// for (int i=0;i<Cluster_Table.size();i++)
-	// {
+	for (int i=0;i<Cluster_Table.size();i++)
+	{
 
-	// 	// Info info;
-	// 	int size = cluster[i]->get_ClusterSize();
-	// 	//initialize result vector with zeros
-	// 	std::vector<double> result(Points[0].size());
-	// 	std::vector<Info> info_array;
-	// 	info_array = cluster[i]->get_array();
-	// 	// get every point in cluster
-	// 	for (int j=0;j<info_array.size();j++)
-	// 	{
-	// 		std::vector<double> point = info_array[j].get_point();
-	// 		result = add_vectors(result, point);
-	// 	}
-	// 	//upologise kai to kentro
-	// 	result = add_vectors(result, Cluster_Table[i]); 
-	// 	result = calculate_average(result,info_array.size());
+		// Info info;
+		// int size = cluster[i]->get_ClusterSize();
+
+		//initialize result vector with zeros
+		std::vector<double> result(Points[0].size());
+		std::vector<Info> info_array;
+		info_array = cluster[i]->get_array();
+		// get every point in cluster
+		for (int j=0;j<info_array.size();j++)
+		{
+			std::vector<double> point = info_array[j].get_point();
+			result = add_vectors(result, point);
+		}
+		//upologise kai to kentro
+		// result = add_vectors(result, Cluster_Table[i]); 
+		result = calculate_average(result,info_array.size());
 		
-	// 	//xreiazetai na valw to palio kentro san geitona??
-	// 	// if (cluster[i]->get_cluster_id() != -1)
-	// 	// {
+		//xreiazetai na valw to palio kentro san geitona??
+		// if (cluster[i]->get_cluster_id() != -1)
+		// {
 
-	// 	// }
+		// }
 		
-	// 	int pos;
-	// 	std::vector<std::vector<double>>::iterator it;
-	// 	it = find(Points.begin(), Points.end(), result);
-	// 	if (it != Points.end())
-	// 	{
-	// 		pos = it - Points.begin();
-	// 		cluster[i]->set_clusterId(pos);
-	// 	}
-	// 	else
-	// 	{
-	// 		pos = -1; 
-	// 		cluster[i]->set_clusterId(pos);	
-	// 	}
-
-	// 	cluster[i]->set_clusterPoint(result);
-	// }
+		int pos;
+		// std::vector<std::vector<double>>::iterator it;
+		// it = find(Points.begin(), Points.end(), result);
+		// if (it != Points.end())
+		// {
+		// 	pos = it - Points.begin();
+		// 	cluster[i]->set_clusterId(pos);
+		// }
+		// else
+		// {
+		// 	pos = -1; 
+		// 	cluster[i]->set_clusterId(pos);	
+		// }
+		Cluster_Table[i] = result;
+		// cluster[i]->set_clusterPoint(result);
+	}
 }
