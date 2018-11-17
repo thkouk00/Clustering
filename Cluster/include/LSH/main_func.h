@@ -10,7 +10,7 @@
 #include "general_functions.h"
 #include "../cluster/Cluster.h"
 
-void Search_Neighbors(HashTable**, Cluster**, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, std::vector<std::string>&, int&, int&, int&);
+void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>&, HashTable**, Cluster**, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, std::vector<std::string>&, int&, int&, int&, bool&);
 void Search_Neighbors(char*, char*, int&, int&, int&);
 
 #endif

@@ -149,6 +149,7 @@ int main(int argc, char const *argv[])
 	}
 	std::map<std::vector<double>, std::vector<double>> new_map;
 	std::map<std::vector<double>, std::vector<double>> old_map;
+	bool k_means_flag = 1;
 
 	Cluster **previous_cluster_setup = cluster; 
 	bool flag = 1;
@@ -157,14 +158,18 @@ int main(int argc, char const *argv[])
 	while (flag)
 	{		
 		// cout <<"LOOP "<<loop<<std::endl;
-		Lloyds_Assignment(new_map, cluster, Points, Cluster_Table, id);
-		// LSH_Assignment(hashTables, cluster, Points, Cluster_Table, id, k_lsh, L, w);
+		// Lloyds_Assignment(new_map, cluster, Points, Cluster_Table, id,k_means_flag);
+		LSH_Assignment(new_map, hashTables, cluster, Points, Cluster_Table, id, k_lsh, L, w, k_means_flag);
 		
-		if (new_map == old_map)
-			break;
-		else
-			old_map = new_map;
-		
+		if (k_means_flag)
+		{
+			//no change in assignments
+			if (new_map == old_map)
+				break;
+			else
+				old_map = new_map;
+		}
+
 
 		for (int i=0;i<Cluster_Table.size();i++)
 		{
@@ -227,7 +232,8 @@ int main(int argc, char const *argv[])
 			cout <<"------------------------------------------------------"<<std::endl;
 		}
 		max_iter++;
-		new_map.clear();
+		if (k_means_flag)
+			new_map.clear();
 	}
 
 	cout <<"END CLUSTERING"<<std::endl;	

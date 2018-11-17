@@ -3,7 +3,7 @@
 using namespace std;
 
 //dataset = Points , queryset = Cluster_Table
-void Search_Neighbors(HashTable** hashTables, Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, int& k, int& L, int& w)
+void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, HashTable** hashTables, Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, int& k, int& L, int& w, bool& k_means_flag)
 {
 	//construct lsh
 	// int hashTable_lines = 0;
@@ -34,7 +34,7 @@ void Search_Neighbors(HashTable** hashTables, Cluster** cluster, std::vector<std
 	// 		hashTables[i]->hashDataset(dataset,id,k);
 	// }
 
-	int queryset_lines = 0;
+	// int queryset_lines = 0;
 	
 	cout <<"Queryset lines "<<queryset.size()<<std::endl;
 	
@@ -60,6 +60,8 @@ void Search_Neighbors(HashTable** hashTables, Cluster** cluster, std::vector<std
 			int second_best_cluster_temp = 0;
 			Info info(dataset[i],id[i],i,second_best_cluster_temp,Dist);
 			cluster[c_pos]->InsertPoint(info);
+			if (k_means_flag)
+				map[dataset[i]] = queryset[c_pos];
 			cout <<"****WAS HERE****"<<std::endl;
 			continue;
 		}
@@ -95,13 +97,15 @@ void Search_Neighbors(HashTable** hashTables, Cluster** cluster, std::vector<std
 			int second_best_cluster_temp = 0;
 			Info info(dataset[i],id[i],i,second_best_cluster_temp,min_distance);
 			cluster[position]->InsertPoint(info);
+			if (k_means_flag)
+				map[dataset[i]] = queryset[position];
 		}
 	}
 
 
-	for (int i=0;i<L;i++)
-		delete hashTables[i];
-	delete[] hashTables;
+	// for (int i=0;i<L;i++)
+	// 	delete hashTables[i];
+	// delete[] hashTables;
 }
 
 //function overload
