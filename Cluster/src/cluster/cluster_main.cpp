@@ -10,6 +10,7 @@
 #include "../../include/cluster/Initialization.h"
 #include "../../include/cluster/Assignment.h"
 #include "../../include/cluster/Update.h"
+#include "../../include/LSH/HashTable.h"
 
 using namespace std;
 
@@ -126,14 +127,6 @@ int main(int argc, char const *argv[])
 
 	std::vector<std::vector<double>> Cluster_Table;
 	int k = 3;
-
-	// for (int ll=0;ll<Points.size();ll++)
-	// {
-	// 	std::vector<double> tempv = Points[ll];
-	// 	for (int q=0;q<tempv.size();q++)
-	// 		cout <<tempv[q]<<' ';
-	// 	cout <<std::endl;
-	// }
 	
 	// Random_Initialization(Cluster_Table, Points, k);
 	// Cluster_Table.clear();
@@ -146,6 +139,17 @@ int main(int argc, char const *argv[])
 	int L = 5;
 	int w = 300;
 
+	//ean exw lsh ftiaxe th domi hastables mia fora 
+	int number_of_buckets = Points.size()/8;
+	HashTable **hashTables = new HashTable*[L];
+	for (int i=0;i<L;i++)
+	{
+		hashTables[i] = new HashTable(number_of_buckets);
+		hashTables[i]->hashDataset(Points,id,k_lsh,w);
+	}
+	std::map<std::vector<double>, std::vector<double>> new_map;
+	std::map<std::vector<double>, std::vector<double>> old_map;
+
 	Cluster **previous_cluster_setup = cluster; 
 	bool flag = 1;
 	int max_iter = 0;
@@ -153,16 +157,15 @@ int main(int argc, char const *argv[])
 	while (flag)
 	{		
 		// cout <<"LOOP "<<loop<<std::endl;
-		Lloyds_Assignment(cluster, Points, Cluster_Table, id);
-		// LSH_Assignment(cluster, Points, Cluster_Table, id, k_lsh, L, w);
+		Lloyds_Assignment(new_map, cluster, Points, Cluster_Table, id);
+		// LSH_Assignment(hashTables, cluster, Points, Cluster_Table, id, k_lsh, L, w);
 		
-		// if (loops > 0 && k_meansFlag)
-		// {
-		// 	for (int i=0;i<Cluster_Table;i++)
-		// 	{
-		// 		if ()
-		// 	}
-		// }
+		if (new_map == old_map)
+			break;
+		else
+			old_map = new_map;
+		
+
 		for (int i=0;i<Cluster_Table.size();i++)
 		{
 			cout <<"********************BEFORE PAM*************************"<<std::endl;
@@ -188,8 +191,8 @@ int main(int argc, char const *argv[])
 			}
 			cout <<"------------------------------------------------------"<<std::endl;
 		}
-		PAM_improved(cluster, Points, Cluster_Table, id,flag);
-		// k_means(cluster, Points, Cluster_Table, id);
+		// PAM_improved(cluster, Points, Cluster_Table, id,flag);
+		k_means(cluster, Points, Cluster_Table, id);
 		cout <<"********************AFTER PAM*************************"<<std::endl;
 		cout <<"CLUSTER TABLE "<<Cluster_Table.size()<<std::endl;
 		for (int i=0;i<Cluster_Table.size();i++)
@@ -224,8 +227,10 @@ int main(int argc, char const *argv[])
 			cout <<"------------------------------------------------------"<<std::endl;
 		}
 		max_iter++;
+		new_map.clear();
 	}
-	
+
+	cout <<"END CLUSTERING"<<std::endl;	
 
 	return 0;
 }

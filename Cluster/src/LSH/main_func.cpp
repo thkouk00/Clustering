@@ -3,7 +3,7 @@
 using namespace std;
 
 //dataset = Points , queryset = Cluster_Table
-void Search_Neighbors(Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, int& k, int& L, int& w)
+void Search_Neighbors(HashTable** hashTables, Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, int& k, int& L, int& w)
 {
 	//construct lsh
 	// int hashTable_lines = 0;
@@ -23,16 +23,16 @@ void Search_Neighbors(Cluster** cluster, std::vector<std::vector<double>>& datas
 		number_of_buckets = pow(2,k);
 
 	 //create L hash_tables
-	HashTable **hashTables;	
-	hashTables = new HashTable*[L];
-	for (int i=0;i<L;i++)
-	{
-		hashTables[i] = new HashTable(number_of_buckets);
-		if (euclidean_flag)
-			hashTables[i]->hashDataset(dataset,id,k,w);
-		else
-			hashTables[i]->hashDataset(dataset,id,k);
-	}
+	// HashTable **hashTables;	
+	// hashTables = new HashTable*[L];
+	// for (int i=0;i<L;i++)
+	// {
+	// 	hashTables[i] = new HashTable(number_of_buckets);
+	// 	if (euclidean_flag)
+	// 		hashTables[i]->hashDataset(dataset,id,k,w);
+	// 	else
+	// 		hashTables[i]->hashDataset(dataset,id,k);
+	// }
 
 	int queryset_lines = 0;
 	
