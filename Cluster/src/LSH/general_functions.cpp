@@ -81,7 +81,7 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 	//min dist between centers divided by 2
 	double min_dist = 9999999;
 	int num_of_clusters = queryset.size();
-	for (int i=0;i<num_of_clusters;i++)
+	for (int i=0;i<num_of_clusters-1;i++)
 	{
 		for (int j=i+1;j<num_of_clusters;j++)
 		{
@@ -91,16 +91,20 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 		}
 	}
 	//starting radius
-	double Radius = min_dist/2;
+	double Rad = min_dist/2;
+	cout <<"initial rad "<<Rad<<std::endl;
+	double Radius;
 	int cluster_pos = 0;
 
 	std::vector<string>::iterator id_iter;
-	std::vector<std::vector<double>>::iterator it;	
-	for (id_iter=id.begin(), it=queryset.begin();it!=queryset.end();it++, id_iter++)
+	// std::vector<std::vector<double>>::iterator it;	
+	// for (id_iter=id.begin(), it=queryset.begin();it!=queryset.end();it++, id_iter++)
+    for (int i=0;i<queryset.size();i++)
     {
     	counter++;
     	 
-    	query = *it;
+    	// query = *it;
+    	query = queryset[i];
 		// create L*fi hashFunctions and L*g Functions for every query
 		for (int i=0;i<L;i++)
 		{
@@ -113,11 +117,13 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 		// output <<std::endl<<"******************************************************************************************************************"<<std::endl;
 		// output <<"Query: "<<*id_iter<<std::endl;
 		cout <<std::endl<<"******************************************************************************************************************"<<std::endl;
-		cout <<"Query: "<<*id_iter<<std::endl;
+		// cout <<"Query: "<<*id_iter<<std::endl;
+		cout <<"Query: "<<i<<std::endl;
 		
 		long double dist = 0;
 		string id;
 		
+		Radius = Rad;
 		bool Stop_flag = 1;
 		while(1)
 		{
@@ -126,9 +132,11 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 			if (!Stop_flag)
 				break;
 			Radius = Radius * 2;
+			if (Radius >= (Rad*10))
+				break;
 		}
 		cluster_pos++;
-		
+		cout <<"NEO QUERY"<<std::endl;
 		// if (Radius != 0)
 		// {
 		// 	//ApproxNN_search

@@ -18,6 +18,7 @@ public:
 	~Info(){};
 	std::vector<double>& get_point();
 	double get_distance();
+	int get_secondBestCluster();
 	int get_Pos_Id();
 	std::string get_Point_Id();
 	void set_point(std::vector<double>&);

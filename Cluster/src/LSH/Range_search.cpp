@@ -14,18 +14,28 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 
 	std::map<std::vector<double>, MapNode>::iterator mapIt;
 
+	int table_counter = 0;
 	// clock_t begin = clock();
 	for (int i=0;i<L;i++)
 	{
 		tmpfi = fi[i];
 		std::vector<int> tmpg(g[i]);
 	
+		cout <<"EDW EIMAI i "<<i<<" me Radius "<<R<<std::endl;
 		if (!(hashTables[i]->bucket_exist(tmpfi)))
+		{
+			cout <<"NO BUCKET "<<table_counter<<std::endl;
+			table_counter++;
 			continue;
+		}
 		
 		Buckets* bucket = hashTables[i]->access_bucket(tmpfi);
 		if (bucket == NULL)
+		{
+			cout <<"Table NULL"<<std::endl;
+			table_counter++;
 			continue;
+		}
 		
 		std::vector<std::vector<double>>::iterator Qit;
 		list<Node> List = bucket->access_list();
@@ -55,14 +65,6 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 				distance = Cosine_Similarity(query,p);
 				g_flag = 1;
 			}
-
-			//trueNN
-			// if (distance < db)
-			// {
-			// 	b = p;
-			// 	db = distance;
-			// 	pid = it->get_id();
-			// }
 			
 			if (g_flag)
 			{
@@ -85,16 +87,25 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 								{
 									assigned_dist = distance;
 									assigned_cluster = cluster_pos;
-									if (Stop)
+									tempNode.set_info(assigned_cluster, assigned_radius, assigned_dist);
+									assigned_elements[p] = tempNode;
+									// point reassigned
+									// if (Stop)
 										Stop = 0;
+									cout <<"***CHECKPOINT1"<<std::endl;
 								}
 							}
 							else if (assigned_radius > R)
 							{
+								assigned_radius = R;
 								assigned_dist = distance;
 								assigned_cluster = cluster_pos;
-								if (Stop)
+								tempNode.set_info(assigned_cluster, assigned_radius, assigned_dist);
+								assigned_elements[p] = tempNode;
+								// point reassigned
+								// if (Stop)
 									Stop = 0;
+								cout <<"***CHECKPOINT2"<<std::endl;
 							}
 						}
 					}
@@ -102,7 +113,8 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 					{
 						tempNode.set_info(cluster_pos, R, distance);
 						assigned_elements[p] = tempNode;
-						if (Stop)
+						//new point assigned
+						// if (Stop)
 							Stop = 0;
 					}
 					cout <<it->get_id()<<" -> distance "<<distance<<std::endl;
@@ -110,6 +122,12 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 			}
 		}
 	}
+	// cout <<"Table counter "<<table_counter<<" and L "<<L<<std::endl;
+	// if (table_counter >= L/2)
+	// {
+	// 	Stop = 0;
+	// }
+	cout <<"STOP FLAG "<<Stop<<std::endl;
 }
 
 

@@ -10,10 +10,10 @@
 #include <ctime>
 #include <bits/stdc++.h>
 
-int random(int);
+int cube_random(int);
 unsigned int binarytodecimal(std::vector<int>&);
-int check_overflow(int);
-void normal_distr_generator(std::vector<double> &,int);
+int cube_check_overflow(int);
+void cube_normal_distr_generator(std::vector<double> &,int);
 
 
 #endif

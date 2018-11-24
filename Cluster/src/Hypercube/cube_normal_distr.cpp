@@ -1,8 +1,9 @@
-#include "../../include/LSH/normal_distr.h"
+#include "../../include/Hypercube/cube_normal_distr.h"
 
 using namespace std;
 
-int random(int n)
+// uniform int distribution
+int cube_random(int n)
 {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator (seed);
@@ -25,8 +26,9 @@ unsigned int binarytodecimal(std::vector<int> &g)
   return decimalNumber;
 }
 
+
 // Function to check integer overflow 
-int check_overflow(int num) 
+int cube_check_overflow(int num) 
 { 
     // Checking if addition will cause overflow 
     if (num >= INT_MAX) 
@@ -37,7 +39,7 @@ int check_overflow(int num)
 } 
 
 //give vector v to fill with random numbers in normal distribution
-void normal_distr_generator(std::vector<double> &v,int elements)
+void cube_normal_distr_generator(std::vector<double> &v,int elements)
 {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator (seed);

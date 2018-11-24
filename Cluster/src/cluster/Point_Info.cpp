@@ -12,6 +12,11 @@ double Info::get_distance()
 	return this->distance;
 }
 
+int Info::get_secondBestCluster()
+{
+	return this->second_best_cluster;
+}
+
 int Info::get_Pos_Id()
 {
 	return this->Pos_id;

@@ -22,18 +22,19 @@ public:
 	~Cluster();
 	void InsertPoint(Info);
 	int get_ClusterSize();
-	double get_minDist();
+	// double get_minDist();
 	std::vector<Info> get_array();
 	int get_cluster_id();
 	void set_clusterPoint(std::vector<double>);
-	void set_clusterId(int&);
-	void set_info(std::vector<double>, int, double);
+	// void set_clusterId(int&);
+	// void set_info(std::vector<double>, int, double);
 	void clear_structure();
 };
 
 class MapNode
 {
 	int cluster_pos;
+	int second_best;
 	double Radius;
 	double distance;
 	

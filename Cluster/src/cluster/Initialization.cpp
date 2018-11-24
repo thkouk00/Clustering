@@ -72,8 +72,8 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 				continue;
 
 			double dist = Euclidean_Distance(Points[j], Points[centroid]);
-			cout <<"AFAIRESI "<<Points.size()-Cluster_Table.size()<<std::endl;
-			cout <<"point_pos "<<point_pos.size()<<std::endl;
+			// cout <<"AFAIRESI "<<Points.size()-Cluster_Table.size()<<std::endl;
+			// cout <<"point_pos "<<point_pos.size()<<std::endl;
 			if ( point_pos.size() < (Points.size()-Cluster_Table.size()) )
 			{
 				point_pos.push_back(j);

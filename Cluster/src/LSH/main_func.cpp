@@ -4,10 +4,7 @@ using namespace std;
 
 //dataset = Points , queryset = Cluster_Table
 void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, HashTable** hashTables, Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, int& k, int& L, int& w, bool& k_means_flag)
-{
-	//construct lsh
-	// int hashTable_lines = 0;
-	
+{	
 	bool euclidean_flag = 1;
 
 	std::cout <<endl<< "Number of lines in input file: " << dataset.size()<<std::endl;;
@@ -16,26 +13,12 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
     int number_of_buckets;
     if (euclidean_flag)
     {
-    	number_of_buckets = dataset.size()/8;
+    	number_of_buckets = dataset.size()/4;
 		// number_of_buckets = hashTable_lines/4;
     }
 	else
 		number_of_buckets = pow(2,k);
 
-	 //create L hash_tables
-	// HashTable **hashTables;	
-	// hashTables = new HashTable*[L];
-	// for (int i=0;i<L;i++)
-	// {
-	// 	hashTables[i] = new HashTable(number_of_buckets);
-	// 	if (euclidean_flag)
-	// 		hashTables[i]->hashDataset(dataset,id,k,w);
-	// 	else
-	// 		hashTables[i]->hashDataset(dataset,id,k);
-	// }
-
-	// int queryset_lines = 0;
-	
 	cout <<"Queryset lines "<<queryset.size()<<std::endl;
 	
 	//structure to track assigned points
@@ -43,6 +26,8 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 	// search neighbors from query_file
 	search_neighbors(assigned_elements, hashTables, id, queryset, L, k, w, number_of_buckets, euclidean_flag);
 
+
+	cout <<"Points assigned from range "<<assigned_elements.size()<<std::endl;
 	std::vector<std::vector<double>>::iterator qit;
 	std::map<std::vector<double>, MapNode>::iterator it;
 	//assign every point to its cluster

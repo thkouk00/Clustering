@@ -28,75 +28,149 @@ std::vector<double> add_vectors(std::vector<double>& A, std::vector<double>& B)
  	return result;
 }
 
+double calculate_objectiveFunc(std::vector<double>& pointA, std::vector<Info>& Array)
+{
+	long double value = 0;
+	for (int j=0;j<Array.size();j++)
+	{
+		std::vector<double> pointB = Array[j].get_point();
+		if (pointA == pointB)
+			continue;
+		double dist = Euclidean_Distance(pointA, pointB);
+		value += dist;
+	}
+
+	return value;
+}
 
 void PAM_improved(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id,bool& flag)
 {
-	cout <<"IN PAM CLSTER TABLE SIZE "<<Cluster_Table.size()<<std::endl;
+	int changes = 0;
 	for (int i=0;i<Cluster_Table.size();i++)
 	{
-		//compute dist from old centroid
-		double old_dist = 0;
-		std::vector<Info> info_array;
-		info_array = cluster[i]->get_array();
-		//std::vector<double> old_centroid = Cluster_Table[i];
-		for (int j=0;j<info_array.size();j++)
-			old_dist += info_array[j].get_distance();
-
-		// int temp_center;
-		double distance = 0;
-		double min_dist = old_dist;
-		int min_index = -1;
-		std::vector<double> temp_point;
-		for (int j=0;j<info_array.size();j++)
+		int new_centroid = -1;
+		double min_objValue = -1;
+		std::vector<Info> Array = cluster[i]->get_array();
+		// calculate current objective function value
+		std::vector<double> current_centroid = Cluster_Table[i];
+		double old_objValue = calculate_objectiveFunc(current_centroid, Array);
+		for (int j=0;j<Array.size();j++)
 		{
-			distance = info_array[j].get_distance();
-			// temp_center = j;
-			temp_point = info_array[j].get_point();
-			for (int y=0;y<info_array.size();y++)
+			std::vector<double> point = Array[j].get_point();
+			double tmp_objFunc_val = calculate_objectiveFunc(point,Array);
+			tmp_objFunc_val += Euclidean_Distance(point, Cluster_Table[i]);
+			if (j == 0)
 			{
-				std::vector<double> tpoint = info_array[y].get_point() ;
-				if (temp_point == tpoint)
-					continue;
-				distance += Euclidean_Distance(temp_point,tpoint);
+				min_objValue = tmp_objFunc_val;
+				new_centroid = j;
 			}
-
-			if (min_dist > distance)
+			else if (min_objValue > tmp_objFunc_val)
 			{
-				min_dist = distance;
-				min_index = j;
+				min_objValue = tmp_objFunc_val;
+				new_centroid = j;
 			}
 		}
-		//update new centroid
-		// cluster[i]->set_clusterPoint(info_array[min_index].get_point());
-		cout <<"PRINT NEW CENTER"<<std::endl;
-		cout <<"MIN INDEX "<<min_index<<std::endl;
-		cout <<"ARRAY SIZE "<<info_array.size()<<std::endl;
-		if (min_index != -1)
+		cout <<"Old objVal "<<old_objValue<<std::endl;
+		cout <<"New objVal "<<min_objValue<<std::endl;
+		if (min_objValue < old_objValue && min_objValue != -1)
 		{
-			cout <<std::endl;
-			cout <<"----CLUSTER BEFORE----"<<std::endl;
-			for (int y=0;y<Cluster_Table[i].size();y++)
-				cout <<Cluster_Table[i][y]<<',';
-			cout <<std::endl;
-			Cluster_Table[i] = info_array[min_index].get_point();
-			cout <<"----CLUSTER AFTER----"<<std::endl;
-			for (int y=0;y<Cluster_Table[i].size();y++)
-				cout <<Cluster_Table[i][y]<<',';
-			cout <<std::endl;
-			cout <<std::endl;
-			flag = 0;
+			Cluster_Table[i] = Array[new_centroid].get_point();
+			changes++;
 		}
+		
+	}
+	cout <<"****CHANGES "<<changes<<" ****"<<std::endl;
+	if (changes == 0 || ((changes*100)/Cluster_Table.size()) <= 15) //|| (((changes*100)/Cluster_Table.size()) <= 10 && Cluster_Table.size() >= 50))
+	{
+		cout <<"POSOSTO "<<(changes*100)/(double)Cluster_Table.size()<<std::endl;
+		flag = 0;
 	}
 	
 }
+
+// void PAM_improved(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id,bool& flag)
+// {
+// 	// std::vector<std::vector<double>> New_Cluster_Table(Cluster_Table.size());
+// 	// std::vector<std::vector<double>>::iterator it;
+// 	int changes = 0;
+// 	cout <<"IN PAM CLSTER TABLE SIZE "<<Cluster_Table.size()<<std::endl;
+// 	for (int i=0;i<Cluster_Table.size();i++)
+// 	{
+// 		//compute dist from old centroid
+// 		double old_dist = 0;
+// 		std::vector<Info> info_array;
+// 		info_array = cluster[i]->get_array();
+// 		// empty cluster
+// 		if (info_array.size() == 0)
+// 			continue;
+// 		cout <<"Cluster i= "<<i<<" has "<<info_array.size()<<" points"<<std::endl;
+// 		for (int j=0;j<info_array.size();j++)
+// 			old_dist += info_array[j].get_distance();
+
+// 		// int temp_center;
+// 		// double distance = 0;
+// 		double min_dist = old_dist;
+// 		// double min_dist = 0;
+// 		int min_index = -1;
+// 		std::vector<double> temp_centroid;
+// 		for (int j=0;j<info_array.size();j++)
+// 		{
+// 			double distance = 0;
+// 			// dist from centroid
+// 			// distance = info_array[j].get_distance();
+// 			// temp_center = j;
+// 			temp_centroid = info_array[j].get_point();
+// 			for (int y=0;y<info_array.size();y++)
+// 			{
+// 				std::vector<double> tpoint = info_array[y].get_point() ;
+// 				if (temp_centroid == tpoint)
+// 				// if (j == y)
+// 					continue;
+// 				distance += Euclidean_Distance(temp_centroid,tpoint);
+// 			}
+
+// 			if (min_dist > distance)
+// 			{
+// 				min_dist = distance;
+// 				min_index = j;
+// 			}
+// 		}
+// 		//update new centroid
+// 		cout <<"PRINT NEW CENTER"<<std::endl;
+// 		cout <<"MIN INDEX "<<min_index<<std::endl;
+// 		cout <<"ARRAY SIZE "<<info_array.size()<<std::endl;
+// 		// min_index == -1 means that  new_centroid == old_centroid
+// 		if (min_index != -1)
+// 		{
+			
+// 			Cluster_Table[i] = info_array[min_index].get_point();
+// 			changes++;
+
+// 			cout <<"Cluster "<<i<<" allaxe kentro se "<<min_index<<std::endl;
+// 			temp_centroid = info_array[min_index].get_point(); 
+// 			for (int n=0;n<temp_centroid.size();n++)
+// 				cout <<temp_centroid[n]<<' ';
+// 			cout <<std::endl;
+// 		}
+// 		else
+// 		{
+// 			// flag = 0;
+// 			cout <<"Palio kentro paramenei"<<std::endl;
+// 		}
+// 	}
+	
+// 	// if (changes >=2 )
+// 	double percentage = (changes*100)/(double)(Cluster_Table.size());
+// 	cout <<"Pososto allagis "<<percentage<<std::endl;
+// 	if (percentage <= 20)
+// 		flag = 0;
+	
+// }
 
 void k_means(Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id)
 {
 	for (int i=0;i<Cluster_Table.size();i++)
 	{
-
-		// Info info;
-		// int size = cluster[i]->get_ClusterSize();
 
 		//initialize result vector with zeros
 		std::vector<double> result(Points[0].size());
@@ -108,30 +182,9 @@ void k_means(Cluster **cluster, std::vector<std::vector<double>>& Points, std::v
 			std::vector<double> point = info_array[j].get_point();
 			result = add_vectors(result, point);
 		}
-		//upologise kai to kentro
-		// result = add_vectors(result, Cluster_Table[i]); 
+		
 		result = calculate_average(result,info_array.size());
 		
-		//xreiazetai na valw to palio kentro san geitona??
-		// if (cluster[i]->get_cluster_id() != -1)
-		// {
-
-		// }
-		
-		int pos;
-		// std::vector<std::vector<double>>::iterator it;
-		// it = find(Points.begin(), Points.end(), result);
-		// if (it != Points.end())
-		// {
-		// 	pos = it - Points.begin();
-		// 	cluster[i]->set_clusterId(pos);
-		// }
-		// else
-		// {
-		// 	pos = -1; 
-		// 	cluster[i]->set_clusterId(pos);	
-		// }
 		Cluster_Table[i] = result;
-		// cluster[i]->set_clusterPoint(result);
 	}
 }

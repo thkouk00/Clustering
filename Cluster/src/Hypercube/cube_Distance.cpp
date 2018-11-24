@@ -1,17 +1,16 @@
-#include "../../include/LSH/Distance.h"
+#include "../../include/Hypercube/cube_Distance.h"
 
-long double Euclidean_Distance(std::vector<double> & A, std::vector<double> &B)
+long double cube_Euclidean_Distance(std::vector<double> & A, std::vector<double> &B)
 {
- 	long double sum = 0;
- 	for(unsigned int i = 0;i<A.size();i++)
- 	{
- 		sum += pow((double)(A[i] - B[i]),2);
- 	}
- 	
- 	return sqrtl(sum);
-};
+	long double sum = 0;
+	for(unsigned int i = 0;i<A.size();i++)
+	{
+		sum += pow((double)(A[i] - B[i]),2);
+	}
+	return sqrtl(sum);
+}
 
-long double Cosine_Similarity(std::vector<double> &A, std::vector<double> &B)
+long double cube_Cosine_Similarity(std::vector<double> &A, std::vector<double> &B)
 {
 	long double in_product = 0.0;
 	double d_a = 0.0;
