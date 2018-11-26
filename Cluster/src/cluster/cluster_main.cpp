@@ -12,8 +12,13 @@
 #include "../../include/cluster/Update.h"
 #include "../../include/cluster/Silhouette.h"
 #include "../../include/LSH/HashTable.h"
+#include "../../include/Hypercube/cube_HashTable.h"
+
 
 using namespace std;
+
+std::vector<std::vector<double>> Distance_Table;
+std::vector<int> Cluster_position;
 
 void Usage()
 {
@@ -144,40 +149,78 @@ int main(int argc, char const *argv[])
 	std::vector<std::vector<double>> Cluster_Table;
 	// int k = 50;
 	
+	for (int i=0;i<Points.size();i++)
+	{
+		std::vector<double> v;
+		Distance_Table.push_back(v);
+		// for (int j=i+1;j<Points.size();j++)
+		for (int j=i;j<Points.size();j++)
+			Distance_Table[i].push_back(0);
+		cout <<"Size i "<<i<<" is "<<Distance_Table[i].size()<<std::endl;
+	}	
+
 	// initialization algorithms
 	Random_Initialization(Cluster_Table, Points, k);
 	// K_means_plusplus(Cluster_Table, Points, k);
+
 	Cluster** cluster = new Cluster*[Cluster_Table.size()];
 	for (int i=0;i<Cluster_Table.size();i++)
 		cluster[i] = new Cluster;
 
 	int k_lsh = 4;
 	int L = 5;
-	int w = 300;
+	int w = 2;
 
 	//ean exw lsh ftiaxe th domi hastables mia fora 
 	//na dokimasw /4 kai /8 kai na peiraxw kai to w se mikra px 2
-	// int number_of_buckets = Points.size()/4;
-	// HashTable **hashTables = new HashTable*[L];
-	// for (int i=0;i<L;i++)
+	bool LSH_flag = 1;
+	bool cube_flag = 0;
+	HashTable **hashTables;
+	HashTable *cube;
+	if (LSH_flag)
+	{	
+		int number_of_buckets = Points.size()/4;
+		hashTables = new HashTable*[L];
+		for (int i=0;i<L;i++)
+		{
+			hashTables[i] = new HashTable(number_of_buckets);
+			hashTables[i]->hashDataset(Points,id,k_lsh,w);
+		}
+	}
+
+	// int k_cube;
+	// int M = 10;
+	// int probes = 2;
+	// if (cube_flag)
 	// {
-	// 	hashTables[i] = new HashTable(number_of_buckets);
-	// 	hashTables[i]->hashDataset(Points,id,k_lsh,w);
+	// 	k_cube = (int)log2(Points.size());
+	// 	int number_of_buckets = pow(2,k_cube); 
+	// 	cube = new HashTable(number_of_buckets);
+	// 	std::map<int,bool> coinmap;
+	// 	cube->hashDataset(Points, id, k_cube, w);
 	// }
 	std::map<std::vector<double>, std::vector<double>> new_map;
 	std::map<std::vector<double>, std::vector<double>> old_map;
 
-	bool k_means_flag = 1;
+	bool k_means_flag = 0;
 	bool flag = 1;
 	int max_iter = 0;
+	double old_objective = -1;
 	while (flag)
 	{		
-		// cout <<"LOOP "<<loop<<std::endl;
-		Lloyds_Assignment(new_map, cluster, Points, Cluster_Table, id,k_means_flag);
-		if (max_iter == 10)
+		double current_objective = 0;
+		// cout <<"HERE"<<std::endl;
+		Lloyds_Assignment(new_map, cluster, Points, Cluster_Table, id, k_means_flag, current_objective);
+		// LSH_Assignment(new_map, hashTables, cluster, Points, Cluster_Table, id, k_lsh, L, w, k_means_flag);
+		// Hypercube_Assignment(new_map, cube, cluster, Points, Cluster_Table, id, k_cube, M, probes, w, k_means_flag);
+		// cout <<"OBJECTIVE "<<abs(current_objective - old_objective)<<std::endl;
+		// if ( (abs(current_objective - old_objective) <= 0.02) && max_iter != 0 )
+		// 	break;
+		// old_objective = current_objective;
+		
+		if (max_iter == 20)
 			break;
 		
-		// LSH_Assignment(new_map, hashTables, cluster, Points, Cluster_Table, id, k_lsh, L, w, k_means_flag);
 		
 		if (k_means_flag)
 		{
@@ -199,7 +242,7 @@ int main(int argc, char const *argv[])
 					if (pointIt != Cluster_Table.end())
 						continue;
 				}
-				// old_map.clear();
+				old_map.clear();
 				old_map = new_map;
 				// new_map.clear();
 			}
@@ -215,42 +258,81 @@ int main(int argc, char const *argv[])
 	}
 
 	cout <<"CLUSTER TABLE "<<Cluster_Table.size()<<std::endl;
-	for (int i=0;i<Cluster_Table.size();i++)
+	if (Points.size() < 20)
+	{	
+		for (int i=0;i<Cluster_Table.size();i++)
+		{
+			std::vector<std::vector<double>>::iterator iterat;
+			iterat = find(Points.begin(),Points.end(),Cluster_Table[i]);
+			if (iterat != Points.end())
+				cout <<"BRETHIKE MISTI MOY"<<std::endl;
+			cout <<"------------------------------------------------------"<<std::endl;
+			cout <<"ClusteR "<<i<<" is: "<<std::endl;
+			std::vector<double> P = Cluster_Table[i];
+			for (int j=0;j<P.size();j++)
+				cout <<P[j]<<',';
+			cout <<std::endl;
+			std::vector<Info> v = cluster[i]->get_array();
+			cout <<"**ASSIGNED POINTS size **"<<v.size()<<std::endl;	
+			for (int j=0;j<v.size();j++)
+			{
+				Info info = v[j];
+				std::vector<double> point;
+				int id;
+				point = info.get_point();
+				std::vector<std::vector<double>>::iterator iterat;
+				iterat = find(Points.begin(),Points.end(),point);
+				if (iterat != Points.end())
+					cout <<"BRETHIKE MISTI MOY"<<std::endl;
+				id = info.get_Pos_Id();
+				for (int l=0;l<point.size();l++)
+					cout <<point[l]<<',';
+				cout <<" and point id "<<id<<std::endl;
+			}
+			cout <<"------------------------------------------------------"<<std::endl;
+		}
+	}
+	else
 	{
-		// std::vector<std::vector<double>>::iterator iterat;
-		// iterat = find(Points.begin(),Points.end(),Cluster_Table[i]);
-		// if (iterat != Points.end())
-		// 	cout <<"BRETHIKE MISTI MOY"<<std::endl;
-		cout <<"------------------------------------------------------"<<std::endl;
-		cout <<"ClusteR "<<i<<" is: "<<std::endl;
-		std::vector<double> P = Cluster_Table[i];
-		// for (int j=0;j<P.size();j++)
-		// 	cout <<P[j]<<',';
-		// cout <<std::endl;
-		std::vector<Info> v = cluster[i]->get_array();
-		cout <<"**ASSIGNED POINTS size **"<<v.size()<<std::endl;	
-		// for (int j=0;j<v.size();j++)
-		// {
-		// 	Info info = v[j];
-		// 	std::vector<double> point;
-		// 	int id;
-		// 	point = info.get_point();
-		// 	std::vector<std::vector<double>>::iterator iterat;
-		// 	iterat = find(Points.begin(),Points.end(),point);
-		// 	if (iterat != Points.end())
-		// 		cout <<"BRETHIKE MISTI MOY"<<std::endl;
-		// 	id = info.get_Pos_Id();
-		// 	for (int l=0;l<point.size();l++)
-		// 		cout <<point[l]<<',';
-		// 	cout <<" and point id "<<id<<std::endl;
-		// }
-		cout <<"------------------------------------------------------"<<std::endl;
+		for (int i=0;i<Cluster_Table.size();i++)
+		{
+			// std::vector<std::vector<double>>::iterator iterat;
+			// iterat = find(Points.begin(),Points.end(),Cluster_Table[i]);
+			// if (iterat != Points.end())
+			// 	cout <<"BRETHIKE MISTI MOY"<<std::endl;
+			// cout <<"------------------------------------------------------"<<std::endl;
+			cout <<"ClusteR "<<i<<" is: "<<std::endl;
+			// std::vector<double> P = Cluster_Table[i];
+			// for (int j=0;j<P.size();j++)
+			// 	cout <<P[j]<<',';
+			// cout <<std::endl;
+			std::vector<Info> v = cluster[i]->get_array();
+			cout <<"**ASSIGNED POINTS size **"<<v.size()<<std::endl;	
+			// for (int j=0;j<v.size();j++)
+			// {
+			// 	Info info = v[j];
+			// 	std::vector<double> point;
+			// 	int id;
+			// 	point = info.get_point();
+			// 	std::vector<std::vector<double>>::iterator iterat;
+			// 	iterat = find(Points.begin(),Points.end(),point);
+			// 	if (iterat != Points.end())
+			// 		cout <<"BRETHIKE MISTI MOY"<<std::endl;
+			// 	id = info.get_Pos_Id();
+			// 	for (int l=0;l<point.size();l++)
+			// 		cout <<point[l]<<',';
+			// 	cout <<" and point id "<<id<<std::endl;
+			// }
+			// cout <<"------------------------------------------------------"<<std::endl;
+		}
 	}
 	cout <<"END CLUSTERING"<<std::endl;	
 	cout <<"ITERS "<<max_iter<<std::endl;
-	double silhouette = Silhouette(cluster, k);
+	double silhouette = Silhouette(Cluster_Table, cluster, k, k_means_flag);
 	cout <<"Silhouette value "<<silhouette<<std::endl;
-	// cout <<"Distance between 14,10,21,20,20 and 10,10,11,10,11 is "<<Euclidean_Distance(Points[12], Points[10])<<std::endl;
-	// cout <<"Distance between 10,10,11,10,11 and 5,5,6,6,6 is "<<Euclidean_Distance(Points[10], Points[6])<<std::endl;
+	cout <<"Distance Table last "<<Distance_Table[Distance_Table.size()-1].size()<<" pos "<<Distance_Table.size()-1<<" and value "<<Distance_Table[Distance_Table.size()-1][0]<<std::endl;
+	cout <<"Distance Size "<<Distance_Table.size()<<std::endl;
+	cout <<"Distance between point 1 and 6 is "<<Euclidean_Distance(Points[0],Points[5]);
+	
 	return 0;
 }

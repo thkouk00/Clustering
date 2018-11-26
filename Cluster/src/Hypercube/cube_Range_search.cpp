@@ -4,7 +4,7 @@ using namespace std;
 
 
 // void Range_search(HashTable *cube, std::vector<int> &g, std::vector<double> &query, int &position, int &M, int &probes, int &k, double &R, bool Euclidean, std::ofstream &output, double &TrueDist)
-void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, cube_HashTable *cube, std::vector<int> &g, std::vector<double> &query, std::vector<std::vector<double>> &queryset, int &position, int &M, int &probes, int &k, double &R, bool Euclidean, bool& Stop, int& cluster_pos)
+void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable *cube, std::vector<int> &g, std::vector<double> &query, std::vector<std::vector<double>> &queryset, int &position, int &M, int &probes, int &k, double &R, bool Euclidean, bool& Stop, int& cluster_pos)
 {
 	int tmpfi;
 	long double distance;
@@ -34,7 +34,7 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 			while (!neighbor_flag)
 			{
 				bitset<32> current_vertex(position);
-				for (y=0;y<cube->cube_get_num_of_buckets();y++)
+				for (y=0;y<cube->get_num_of_buckets();y++)
 				{
 					if (y == position)
 						continue;
@@ -45,7 +45,7 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 					{
 						tmp_pos = (int)(neighbor.to_ulong());
 						
-						if (!(cube->cube_bucket_exist(tmp_pos)))
+						if (!(cube->bucket_exist(tmp_pos)))
 							continue;
 						
 						position = tmp_pos;
@@ -54,13 +54,13 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 					}
 				}
 				// if no neighbor with hamming distance h_dist , search for h_dist+1
-				if (y == cube->cube_get_num_of_buckets() && !neighbor_flag)
+				if (y == cube->get_num_of_buckets() && !neighbor_flag)
 					h_dist++;
 			}
 		}
-		if (!(cube->cube_bucket_exist(position)))
+		if (!(cube->bucket_exist(position)))
 			continue;
-		Buckets* bucket = cube->cube_access_bucket(position);
+		Buckets* bucket = cube->access_bucket(position);
 		if (bucket == NULL)
 			continue;
 		list<Node> List = bucket->access_list();
@@ -99,16 +99,19 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 					if (mapIt != assigned_elements.end())
 					{
 						int assigned_cluster;
+						int second_best;
 						double assigned_dist;
 						double assigned_radius;
 						tempNode = mapIt->second;
-						tempNode.get_all(assigned_cluster, assigned_radius, assigned_dist);
+						tempNode.get_all(assigned_cluster, second_best, assigned_radius, assigned_dist);
 						if (assigned_cluster != cluster_pos)
 						{
 							if (assigned_radius == R)
 							{
 								if (assigned_dist > distance)
 								{
+									second_best = assigned_cluster;
+
 									assigned_dist = distance;
 									assigned_cluster = cluster_pos;
 									if (Stop)
@@ -117,6 +120,8 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 							}
 							else if (assigned_radius > R)
 							{
+								second_best = assigned_cluster;
+
 								assigned_dist = distance;
 								assigned_cluster = cluster_pos;
 								if (Stop)
@@ -126,7 +131,8 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 					}
 					else
 					{
-						tempNode.set_info(cluster_pos, R, distance);
+						int temp_sec = -1;
+						tempNode.set_info(cluster_pos, temp_sec, R, distance);
 						assigned_elements[p] = tempNode;
 						if (Stop)
 							Stop = 0;

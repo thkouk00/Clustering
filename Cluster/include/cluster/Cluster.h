@@ -41,8 +41,8 @@ class MapNode
 public:
 	MapNode(){};
 	~MapNode(){};
-	void set_info(int, double, double);
-	void get_all(int&, double&, double&);
+	void set_info(int, int, double, double);
+	void get_all(int&, int&, double&, double&);
 	
 };
 

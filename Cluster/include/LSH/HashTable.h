@@ -31,7 +31,10 @@ public:
 	void printAll();
 	int get_num_of_buckets();
 	Buckets* access_bucket(int&);
+	// for LSH
 	void hashDataset(std::vector<std::vector<double>>&, std::vector<std::string> &,int, int);
+	//for Hypercube
+	void hashDataset(std::vector<std::vector<double>>&, std::vector<std::string> &, std::map<int,bool>&,int, int);
 	//overloading function
 	void hashDataset(std::vector<std::vector<double>>&, std::vector<std::string> &,int);
 

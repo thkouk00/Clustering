@@ -1,5 +1,8 @@
 #include "../../include/LSH/Distance.h"
 
+extern std::vector<std::vector<double>> Distance_Table;
+extern std::vector<int> Cluster_position;
+
 long double Euclidean_Distance(std::vector<double> & A, std::vector<double> &B)
 {
  	long double sum = 0;
@@ -44,4 +47,44 @@ long double Cosine_Similarity(std::vector<double> &A, std::vector<double> &B)
 	}
 
 	return in_product / (sqrt(d_a) * sqrt(d_b));
+}
+
+double Find_Distance(std::vector<double>& A, std::vector<double>& B, int& posA, int& posB)
+{
+	// std::cout <<"PosA "<<posA<<" and PosB "<<posB<<std::endl;
+	int min;
+	int max;
+	int position;
+	if (posA > posB)
+	{
+		min = posB;
+		max = posA;
+	}
+	else
+	{
+		min = posA;
+		max = posB;	
+	}
+
+	double distance;
+	position = max - min;
+	// std::cout <<"Position "<<position<<" and min= "<<min<<" max= "<<max<<std::endl;
+	if (Distance_Table[min][position] != 0)
+	{
+		// std::cout <<"HERE 1"<<std::endl;
+		// std::cout <<"Taking dist from "<<min<<","<<position-1<<std::endl;
+		distance = Distance_Table[min][position]; 
+		// std::vector<double> tmpV = Distance_Table[min];
+		// distance = tmpV[position-1];
+		// std::cout <<"HERE 2"<<std::endl;
+	}
+	else
+	{
+		// std::cout <<"HERE 3"<<std::endl;
+		distance = Euclidean_Distance(A, B);
+		Distance_Table[min][position] = distance;
+		// std::cout <<"HERE 4 evala se "<<min<<" ,"<<position-1<<" dist "<<distance<<std::endl;
+	}
+	// std::cout <<"Size "<<Distance_Table[min].size()<<std::endl;
+	return distance;
 }

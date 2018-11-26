@@ -75,19 +75,22 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 					if (mapIt != assigned_elements.end())
 					{
 						int assigned_cluster;
+						int second_best;
 						double assigned_dist;
 						double assigned_radius;
 						tempNode = mapIt->second;
-						tempNode.get_all(assigned_cluster, assigned_radius, assigned_dist);
+						tempNode.get_all(assigned_cluster, second_best, assigned_radius, assigned_dist);
 						if (assigned_cluster != cluster_pos)
 						{
 							if (assigned_radius == R)
 							{
 								if (assigned_dist > distance)
 								{
+									second_best = assigned_cluster;
+
 									assigned_dist = distance;
 									assigned_cluster = cluster_pos;
-									tempNode.set_info(assigned_cluster, assigned_radius, assigned_dist);
+									tempNode.set_info(assigned_cluster, second_best, assigned_radius, assigned_dist);
 									assigned_elements[p] = tempNode;
 									// point reassigned
 									// if (Stop)
@@ -97,10 +100,12 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 							}
 							else if (assigned_radius > R)
 							{
+								second_best = assigned_cluster;
+
 								assigned_radius = R;
 								assigned_dist = distance;
 								assigned_cluster = cluster_pos;
-								tempNode.set_info(assigned_cluster, assigned_radius, assigned_dist);
+								tempNode.set_info(assigned_cluster, second_best, assigned_radius, assigned_dist);
 								assigned_elements[p] = tempNode;
 								// point reassigned
 								// if (Stop)
@@ -111,7 +116,8 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 					}
 					else
 					{
-						tempNode.set_info(cluster_pos, R, distance);
+						int temp_sec = -1;
+						tempNode.set_info(cluster_pos, temp_sec, R, distance);
 						assigned_elements[p] = tempNode;
 						//new point assigned
 						// if (Stop)

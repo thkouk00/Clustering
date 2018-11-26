@@ -127,8 +127,8 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 		bool Stop_flag = 1;
 		while(1)
 		{
-			// Range_search(hashTables,g,query,fi,L,k,Radius,Euclidean,output,TrueDist);
-			Range_search(assigned_elements,hashTables,g,query,queryset,fi,L,k,Radius,Euclidean,Stop_flag,cluster_pos);
+			// Range_search(assigned_elements,hashTables,g,query,queryset,fi,L,k,Radius,Euclidean,Stop_flag,cluster_pos);
+			Range_search(assigned_elements,hashTables,g,query,queryset,fi,L,k,Radius,Euclidean,Stop_flag,i);
 			if (!Stop_flag)
 				break;
 			Radius = Radius * 2;

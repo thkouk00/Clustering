@@ -38,12 +38,29 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 		if (it != assigned_elements.end())
 		{
 			int c_pos;
+			int sec_best;
+			double sec_best_dist = 999999;
 			double rad;
 			double Dist;
 			
-			it->second.get_all(c_pos,rad,Dist);
-			int second_best_cluster_temp = 0;
-			Info info(dataset[i],id[i],i,second_best_cluster_temp,Dist);
+			it->second.get_all(c_pos,sec_best,rad,Dist);
+			if (sec_best == -1)
+			{
+				for (int l=0;l<queryset.size();l++)
+				{
+					if (queryset[l] == dataset[i])
+						continue;
+					double temp_dist = Euclidean_Distance(queryset[l], dataset[i]);
+					
+					if (sec_best_dist > temp_dist && temp_dist > Dist)
+					{
+						sec_best_dist = temp_dist;
+						sec_best = l;
+					}
+				}
+			}
+
+			Info info(dataset[i],id[i],i,sec_best,Dist);
 			cluster[c_pos]->InsertPoint(info);
 			if (k_means_flag)
 				map[dataset[i]] = queryset[c_pos];
@@ -59,6 +76,8 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 			double tmp_dist;
 			double min_distance;
 			int position;
+			int second_best;
+			double second_dist = 999999;
 			//find nearest centroid
 			for (int j=0;j<queryset.size();j++)
 			{
@@ -70,17 +89,24 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 				}
 				else if (min_distance > tmp_dist)
 				{
+					second_best = position;
+					second_dist = min_distance;
+
 					position = j;
 					min_distance = tmp_dist;
+				}
+				else if (second_dist > tmp_dist)
+				{
+					second_best = j;
+					second_dist = tmp_dist;
 				}
 
 			}
 			MapNode node;
-			node.set_info(position, 0, min_distance);
+			node.set_info(position, second_best, 0, min_distance);
 			assigned_elements.insert ( std::pair<std::vector<double>, MapNode>(dataset[i],node) );
 			
-			int second_best_cluster_temp = 0;
-			Info info(dataset[i],id[i],i,second_best_cluster_temp,min_distance);
+			Info info(dataset[i],id[i],i,second_best,min_distance);
 			cluster[position]->InsertPoint(info);
 			if (k_means_flag)
 				map[dataset[i]] = queryset[position];

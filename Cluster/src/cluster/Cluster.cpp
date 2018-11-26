@@ -55,16 +55,18 @@ void Cluster::clear_structure()
 }
 
 
-void MapNode::set_info(int cluster, double Rad, double dist)
+void MapNode::set_info(int cluster, int second_best, double Rad, double dist)
 {
 	this->cluster_pos = cluster;
+	this->second_best = second_best;
 	this->Radius = Rad;
 	this->distance = dist;
 }
-void MapNode::get_all(int& cluster_pos, double& rad, double& distance)
+void MapNode::get_all(int& cluster_pos, int& second_best, double& rad, double& distance)
 {
 
 	cluster_pos = this->cluster_pos;
+	second_best = this->second_best;
 	rad = this->Radius; 
 	distance = this->distance; 
 }

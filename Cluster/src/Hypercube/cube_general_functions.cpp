@@ -68,7 +68,7 @@ void cube_storeDataset(std::vector<std::vector<double>> &dataset, std::vector<st
 // }
 
 // void search_neighbors(HashTable *cube,std::vector<std::string> &id,std::vector<std::vector<double>> &queryset,std::map<int,bool> &mymap,int &M, int &probes,int &k,int &w, int &num_of_buckets, double &Radius,bool &Euclidean,std::ofstream &output)
-void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements, cube_HashTable *cube,std::vector<std::string> &id,std::vector<std::vector<double>> &queryset,std::map<int,bool> &mymap,int &M, int &probes,int &k,int &w, int &num_of_buckets, bool &Euclidean)
+void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable *cube,std::vector<std::string> &id,std::vector<std::vector<double>> &queryset,std::map<int,bool> &mymap,int &M, int &probes,int &k,int &w, int &num_of_buckets, bool &Euclidean)
 {
 	int position;
 	double maxfraction = 0;

@@ -6,8 +6,9 @@
 #include "Cluster.h"
 #include "../LSH/Distance.h"
 
-double Silhouette(Cluster**, int&);
-double avg_dist_sameCluster(Info&, std::vector<Info>&);
-double avg_dist_neighbor(Info&, Cluster**);
+double Silhouette(std::vector<std::vector<double>>&, Cluster**, int&, bool&);
+double calc_distance(std::vector<double>&, Cluster**, int);
+double avg_dist_sameCluster(Info&, std::vector<Info>&, bool&);
+double avg_dist_neighbor(Info&, Cluster**, bool&);
 
 #endif

@@ -2,6 +2,8 @@
 
 using namespace std;
 
+extern std::vector<std::vector<double>> Distance_Table;
+extern std::vector<int> Cluster_position;
 
 void Random_Initialization(std::vector<std::vector<double>>& Cluster_Table, std::vector<std::vector<double>>& Points,int& k)
 {
@@ -31,8 +33,22 @@ void Random_Initialization(std::vector<std::vector<double>>& Cluster_Table, std:
 				cout <<"new element "<<rand_center<<std::endl;
 				vec.push_back(rand_center);
 				Cluster_Table.push_back(Points[rand_center]);
+				Cluster_position.push_back(rand_center);
+				for (int i=0;i<Points[rand_center].size();i++)
+					std::cout <<Points[rand_center][i]<<' ';
+				std::cout <<std::endl;
+				std::cout <<"And center is "<<rand_center<<" and "<<Cluster_position[Cluster_position.size()-1]<<std::endl;
 				break;
 			}
+		}
+	}
+	//tsekarw an ontos einai makria metaxi tous
+	for (int i=0;i<Cluster_Table.size();i++)
+	{
+		for (int j=i+1;j<Cluster_Table.size();j++)
+		{
+			double dist = Euclidean_Distance(Cluster_Table[i], Cluster_Table[j]);
+			cout <<"Distance between Cluster "<<i+1<<" and Cluster "<<j+1<<" is "<<dist<<std::endl;
 		}
 	}
 }
@@ -54,7 +70,8 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 	//holds min dist for every Point
 	std::vector<int> point_pos;
 	std::vector<double> min_distance;
-	std::vector<double> max_distance;
+	// std::vector<double> max_distance;
+	double max_distance;
 	std::vector<std::vector<double>>::iterator it;
 	
 	std::vector<double> P;
@@ -71,57 +88,61 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 			if (it != Cluster_Table.end())
 				continue;
 
-			double dist = Euclidean_Distance(Points[j], Points[centroid]);
+			// double dist = Euclidean_Distance(Points[j], Points[centroid]);
+			double dist = Find_Distance(Points[j], Points[centroid], j, centroid);
 			// cout <<"AFAIRESI "<<Points.size()-Cluster_Table.size()<<std::endl;
 			// cout <<"point_pos "<<point_pos.size()<<std::endl;
-			if ( point_pos.size() < (Points.size()-Cluster_Table.size()) )
+			// if ( point_pos.size() < (Points.size()-Cluster_Table.size()) )
+			if (i == 0)
 			{
 				point_pos.push_back(j);
 				min_distance.push_back(dist);
-				max_distance.push_back(dist);
+				// max_distance.push_back(dist);
+				max_distance = dist;
 			}
 			else
 			{
 				if (min_distance[j] > dist)
 					min_distance[j] = dist;
-				else if (max_distance[j] < dist)
-					max_distance[j] = dist;
+				else if (max_distance < dist)
+				// else if (max_distance[j] < dist)
+					max_distance = dist;
 			}
 		}
 
 		for (int j=0;j<point_pos.size();j++)
 		{
-			double prob = 0;
-			//partial sum for every element in vector
-			// for (int y=0;y<=j;y++)
-			for (int y=0;y<j;y++)
-				prob += pow(min_distance[y], 2);
-			prob = prob / max_distance[j];
-			P.push_back(P[j] + prob);
+			// double prob = 0;
+			// //partial sum for every element in vector
+			// // for (int y=0;y<=j;y++)
+			// for (int y=0;y<j;y++)
+			// 	prob += pow(min_distance[y], 2);
+			// prob = prob / max_distance;
+			P.push_back(P[j] + ((min_distance[j]/max_distance)*(min_distance[j]/max_distance)));
 			// cout <<P[j+1]<<std::endl;
 		}
 		cout <<"---------------------------------"<<std::endl;
 
 		// std::uniform_real_distribution<double> distr(0,P[P.size()-1]);
-		std::uniform_real_distribution<double> distr(0,P[Points.size()-Cluster_Table.size()]);
+		std::uniform_real_distribution<double> distr(0,P[P.size()-1]);
 		double x = distr(generator);
 		int upper = P.size();
 		int lower = 1;
 		int mid = lower + ((upper-lower)/2);
 		cout <<"X is "<<x<<std::endl;
 		cout <<"Mid before while "<<mid<<" upper "<<upper<<" and lower "<<lower<<std::endl;
-		cout <<"Bound "<<P[P.size()]<<std::endl;;
+		cout <<"Bound "<<P[P.size()-1]<<std::endl;;
 		while(1)
 		{
 			if (P[mid] == x)
 			{
 				centroid = point_pos[mid-1];
-				cout <<"NEW ELEMENT P[mid]==x -> "<<mid<<" and centroid "<<centroid<<std::endl;
+				cout <<"1)NEW ELEMENT P[mid]==x -> "<<mid<<" and centroid "<<centroid<<std::endl;
 
 				//delete centroid from  point vector
-				point_pos.erase(point_pos.begin() + (mid - 1));
-				min_distance.erase(min_distance.begin()+(mid - 1));
-				max_distance.erase(max_distance.begin()+(mid - 1));
+				// point_pos.erase(point_pos.begin() + (mid - 1));
+				// min_distance.erase(min_distance.begin()+(mid - 1));
+				// max_distance.erase(max_distance.begin()+(mid - 1));
 				
 				break;
 			}
@@ -130,12 +151,12 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 				if (mid > 0 && P[mid-1] < x)
 				{
 					centroid = point_pos[mid-1];
-					cout <<"NEW ELEMENT second case "<<mid<<" and centroid "<<centroid<<std::endl;
+					cout <<"2)NEW ELEMENT second case "<<mid<<" and centroid "<<centroid<<std::endl;
 					
 					//delete centroid from  point vector
-					point_pos.erase(point_pos.begin() + (mid - 1));
-					min_distance.erase(min_distance.begin()+(mid - 1));
-					max_distance.erase(max_distance.begin()+(mid - 1));
+					// point_pos.erase(point_pos.begin() + (mid - 1));
+					// min_distance.erase(min_distance.begin()+(mid - 1));
+					// max_distance.erase(max_distance.begin()+(mid - 1));
 					
 					break;
 				}	
@@ -152,10 +173,13 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 				if (mid == lower)
 					mid++;
 
-				cout <<"New mid "<<mid<<" upper "<<upper<<" lower "<<lower<<std::endl;
+				cout <<"3)New mid "<<mid<<" upper "<<upper<<" lower "<<lower<<std::endl;
 			}	
 		}
+		point_pos.erase(point_pos.begin() + (mid - 1));
+		min_distance.erase(min_distance.begin()+(mid - 1));
 		Cluster_Table.push_back(Points[centroid]);
+		Cluster_position.push_back(centroid);
 		P.clear();
 	}
 	
@@ -166,5 +190,15 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 		for (int j=0;j<v.size();j++)
 			cout <<v[j]<<' ';
 		cout <<std::endl;
+	}
+
+	//tsekarw an ontos einai makria metaxi tous
+	for (int i=0;i<Cluster_Table.size();i++)
+	{
+		for (int j=i+1;j<Cluster_Table.size();j++)
+		{
+			double dist = Euclidean_Distance(Cluster_Table[i], Cluster_Table[j]);
+			cout <<"Distance between Cluster "<<i+1<<" and Cluster "<<j+1<<" is "<<dist<<std::endl;
+		}
 	}
 }
