@@ -21,11 +21,11 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 	// initial hamming distance
 	int h_dist = 1;
 	bool neighbor_flag = 0;
-
-	clock_t begin = clock();
+	cout <<"Probes "<<probes<<" and R "<<R<<std::endl;
+	// clock_t begin = clock();
 	for (int i=0;i<probes;i++)
 	{
-		if (i > 1)
+		if (i >= 1)
 			break;
 		if (i != 0)
 		{
@@ -66,15 +66,15 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 		list<Node> List = bucket->access_list();
 		
 		std::vector<std::vector<double>>::iterator Qit;
-
+		cout <<"EDW"<<std::endl;
 		for (std::list<Node>::iterator it = List.begin(); it!=List.end(); it++)
 		{
 			std::vector<double> p(it->get_p());
 			
 			//point is centroid
-			Qit = find(queryset.begin(), queryset.end(), p);
-			if (Qit != queryset.end())
-				continue;
+			// Qit = find(queryset.begin(), queryset.end(), p);
+			// if (Qit != queryset.end())
+			// 	continue;
 
 			if (Euclidean)
 				distance = Euclidean_Distance(query,p);
@@ -94,6 +94,7 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 				//range 
 				if (distance < R)
 				{
+					cout <<"INHERE"<<std::endl;
 					MapNode tempNode;
 					mapIt = assigned_elements.find(p);
 					if (mapIt != assigned_elements.end())
@@ -137,22 +138,22 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 						if (Stop)
 							Stop = 0;
 					}
-					cout <<it->get_id()<<" -> distance "<<distance<<std::endl;
+					// cout <<it->get_id()<<" -> distance "<<distance<<std::endl;
 					// output <<it->get_id()<<" -> distance "<<distance<<std::endl;
 					cout <<it->get_id()<<" -> distance "<<distance<<std::endl;
 				}
 			}
 		}
 	}
-	clock_t end = clock();
+	// clock_t end = clock();
 	// measured in ms
-	double elapsed_time = 1000 * ((double)(end-begin)/CLOCKS_PER_SEC);
+	// double elapsed_time = 1000 * ((double)(end-begin)/CLOCKS_PER_SEC);
 
 	// output <<"Nearest neighbor: "<<pid<<std::endl;
 	// output <<"distanceTrue "<<db<<std::endl;
 	// output <<"tTrue: "<<elapsed_time<<std::endl;
-	cout <<"Nearest neighbor: "<<pid<<std::endl;
-	cout <<"distanceTrue "<<db<<std::endl;
-	cout <<"tTrue: "<<elapsed_time<<std::endl;
+	// cout <<"Nearest neighbor: "<<pid<<std::endl;
+	// cout <<"distanceTrue "<<db<<std::endl;
+	// cout <<"tTrue: "<<elapsed_time<<std::endl;
 	// TrueDist = db;
 }

@@ -2,14 +2,28 @@
 
 using namespace std;
 
-void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, HashTable* cube, Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, int& k, int& M, int& probes, int& w, bool& k_means_flag)
+void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, HashTable* cube, Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, std::map<int, bool>& coinmap, int& k, int& M, int& probes, int& w, bool& k_means_flag)
 {
-	std::map<int,bool> mymap;
-	// std::map<int,bool>::iterator it;
+	// std::map<int,bool> mymap;
 
 	bool euclidean_flag = 1;
-	double Radius = 0.0;
-	// int table_lines = 0;
+
+	// double min_dist = 9999999;
+	// int num_of_clusters = queryset.size();
+	// for (int i=0;i<num_of_clusters-1;i++)
+	// {
+	// 	for (int j=i+1;j<num_of_clusters;j++)
+	// 	{
+	// 		double dist = Euclidean_Distance(queryset[i], queryset[j]);
+	// 		if (min_dist > dist)
+	// 			min_dist = dist;
+	// 	}
+	// }
+	// //starting radius
+	// double Rad = min_dist/2;
+	// cout <<"initial rad "<<Rad<<std::endl;
+	// double Radius;
+	// int cluster_pos = 0;
 
 	// cube_storeDataset(dataset, id,input_file, table_lines,euclidean_flag,Radius);
 	if (k == -1)
@@ -21,8 +35,9 @@ void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& m
 	//structure to track assigned points
 	std::map<std::vector<double>, MapNode> assigned_elements;
 	// search neighbors from query_file ***Euclidean Distance***
-	cube_search_neighbors(assigned_elements, cube, id, queryset, mymap, M, probes,k, w, number_of_vertices, euclidean_flag);
+	cube_search_neighbors(assigned_elements, cube, id, queryset, coinmap, M, probes,k, w, number_of_vertices, euclidean_flag);
 	
+	cout <<"Points assigned from range "<<assigned_elements.size()<<std::endl;
 	std::vector<std::vector<double>>::iterator qit;
 	std::map<std::vector<double>, MapNode>::iterator it;
 	//assign every point to its cluster
@@ -44,8 +59,8 @@ void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& m
 			{
 				for (int l=0;l<queryset.size();l++)
 				{
-					if (queryset[l] == dataset[i])
-						continue;
+					// if (queryset[l] == dataset[i])
+					// 	continue;
 					double temp_dist = Euclidean_Distance(queryset[l], dataset[i]);
 					
 					if (sec_best_dist > temp_dist && temp_dist > Dist)
@@ -60,15 +75,15 @@ void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& m
 			cluster[c_pos]->InsertPoint(info);
 			if (k_means_flag)
 				map[dataset[i]] = queryset[c_pos];
-			cout <<"****WAS HERE****"<<std::endl;
-			continue;
+			// cout <<"****WAS HERE****"<<std::endl;
+			// continue;
 		}
 		else
 		{
 			//check if point is centroid
-			qit = find(queryset.begin(), queryset.end(), dataset[i]);
-			if (qit != queryset.end())
-				continue;
+			// qit = find(queryset.begin(), queryset.end(), dataset[i]);
+			// if (qit != queryset.end())
+			// 	continue;
 			double tmp_dist;
 			double min_distance;
 			int position;

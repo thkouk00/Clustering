@@ -70,17 +70,21 @@ void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, 
 				min_dist = dist;
 				cluster_pos = j;
 			}
-			else if (second_dist > dist)
+			else if (second_dist > dist && dist != min_dist)
 			{
-				cout <<"*Allagi second best apo cluster "<<second_best<<" me "<<second_dist<<" se kentro "<<j<<" me "<<dist<<std::endl;
+				cout <<"*Allagi second best apo cluster "<<second_best<<" me "<<second_dist<<" se kentro "<<j<<" me "<<dist<<" me min_dist "<<min_dist<<std::endl;
 				second_dist = dist;
 				second_best = j;
+			}
+			if (Points[i] == Cluster_Table[j])
+			{
+				cout <<"---Cluster kai Point idia cluster number = "<<j<<" antistoixei sto Point_shmeio "<<Cluster_position[j]<<" kai point number = "<<i<<std::endl;
 			}
 		}
 		counter++;
 		// objective += pow(min_dist,2);
 		//exei brethei to kontinotero cluster
-		cout <<"Point "<<i+1<<" Cluster "<<cluster_pos<<" Second best "<<second_best<<std::endl;
+		cout <<"Actual Point "<<i+1<<" Cluster "<<cluster_pos<<" Second best "<<second_best<<std::endl;
 		map[Points[i]] = Cluster_Table[cluster_pos];
 		Info temp(Points[i],point_id[i],i,second_best,min_dist);
 		cout <<"Inserting in cluster "<<cluster_pos<<std::endl;
@@ -101,7 +105,7 @@ void LSH_Assignment(std::map<std::vector<double>, std::vector<double>>& map, Has
 	Search_Neighbors(map, hashTables, cluster, Points, Cluster_Table, point_id, k_lsh, L, w, k_means_flag);
 }
 
-void Hypercube_Assignment(std::map<std::vector<double>, std::vector<double>>& map, HashTable* hashTables, Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, int& k_cube, int& M, int& probes, int& w, bool& k_means_flag)
+void Hypercube_Assignment(std::map<std::vector<double>, std::vector<double>>& map, HashTable* hashTables, Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, std::map<int, bool>& coinmap, int& k_cube, int& M, int& probes, int& w, bool& k_means_flag)
 {
 	//clean structure
 	for (int i=0;i<Cluster_Table.size();i++)
@@ -109,5 +113,5 @@ void Hypercube_Assignment(std::map<std::vector<double>, std::vector<double>>& ma
 		cluster[i]->clear_structure();
 	}
 	// Search_Neighbors(cluster, Points, Cluster_Table, point_id, k_lsh, L, w);
-	cube_Search_Neighbors(map, hashTables, cluster, Points, Cluster_Table, point_id, k_cube, M, probes, w, k_means_flag);
+	cube_Search_Neighbors(map, hashTables, cluster, Points, Cluster_Table, point_id, coinmap, k_cube, M, probes, w, k_means_flag);
 }

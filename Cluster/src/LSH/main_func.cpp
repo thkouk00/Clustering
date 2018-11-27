@@ -48,8 +48,8 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 			{
 				for (int l=0;l<queryset.size();l++)
 				{
-					if (queryset[l] == dataset[i])
-						continue;
+					// if (queryset[l] == dataset[i])
+					// 	continue;
 					double temp_dist = Euclidean_Distance(queryset[l], dataset[i]);
 					
 					if (sec_best_dist > temp_dist && temp_dist > Dist)
@@ -64,15 +64,15 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 			cluster[c_pos]->InsertPoint(info);
 			if (k_means_flag)
 				map[dataset[i]] = queryset[c_pos];
-			cout <<"****WAS HERE****"<<std::endl;
-			continue;
+			// cout <<"****WAS HERE****"<<std::endl;
+			// continue;
 		}
 		else
 		{
 			//check if point is centroid
-			qit = find(queryset.begin(), queryset.end(), dataset[i]);
-			if (qit != queryset.end())
-				continue;
+			// qit = find(queryset.begin(), queryset.end(), dataset[i]);
+			// if (qit != queryset.end())
+			// 	continue;
 			double tmp_dist;
 			double min_distance;
 			int position;

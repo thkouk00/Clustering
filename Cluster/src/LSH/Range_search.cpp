@@ -1,6 +1,8 @@
 #include "../../include/LSH/Range_search.h"
 using namespace std;
 
+
+
 void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<double> &query, std::vector<std::vector<double>> &queryset, std::vector<int> &fi, int &L, int &k, double &R, bool Euclidean, bool& Stop, int& cluster_pos)
 {
 	int tmpfi;
@@ -45,9 +47,9 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 			std::vector<double> p(it->get_p());  
 			
 			//point is centroid
-			Qit = find(queryset.begin(), queryset.end(), p);
-			if (Qit != queryset.end())
-				continue;
+			// Qit = find(queryset.begin(), queryset.end(), p);
+			// if (Qit != queryset.end())
+			// 	continue;
 
 			if (Euclidean)
 			{
@@ -95,7 +97,7 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 									// point reassigned
 									// if (Stop)
 										Stop = 0;
-									cout <<"***CHECKPOINT1"<<std::endl;
+									// cout <<"***CHECKPOINT1"<<std::endl;
 								}
 							}
 							else if (assigned_radius > R)
@@ -110,7 +112,7 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 								// point reassigned
 								// if (Stop)
 									Stop = 0;
-								cout <<"***CHECKPOINT2"<<std::endl;
+								// cout <<"***CHECKPOINT2"<<std::endl;
 							}
 						}
 					}
@@ -123,7 +125,7 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 						// if (Stop)
 							Stop = 0;
 					}
-					cout <<it->get_id()<<" -> distance "<<distance<<std::endl;
+					// cout <<it->get_id()<<" -> distance "<<distance<<std::endl;
 				}
 			}
 		}

@@ -15,7 +15,7 @@
 #include "../cluster/Cluster.h"
 #include "../LSH/HashTable.h"
 
-void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>&, HashTable*, Cluster**, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, std::vector<std::string>&, int&, int&, int&, int&, bool&);
+void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>&, HashTable*, Cluster**, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&, std::vector<std::string>&, std::map<int, bool>&, int&, int&, int&, int&, bool&);
 void cube_Search_Neighbors(char*, char*, int&, int&, int&, int&);
 
 #endif

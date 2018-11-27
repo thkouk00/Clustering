@@ -68,7 +68,7 @@ void cube_storeDataset(std::vector<std::vector<double>> &dataset, std::vector<st
 // }
 
 // void search_neighbors(HashTable *cube,std::vector<std::string> &id,std::vector<std::vector<double>> &queryset,std::map<int,bool> &mymap,int &M, int &probes,int &k,int &w, int &num_of_buckets, double &Radius,bool &Euclidean,std::ofstream &output)
-void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable *cube,std::vector<std::string> &id,std::vector<std::vector<double>> &queryset,std::map<int,bool> &mymap,int &M, int &probes,int &k,int &w, int &num_of_buckets, bool &Euclidean)
+void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable *cube,std::vector<std::string> &id,std::vector<std::vector<double>> &queryset,std::map<int,bool>& coinmap,int &M, int &probes,int &k,int &w, int &num_of_buckets, bool &Euclidean)
 {
 	int position;
 	double maxfraction = 0;
@@ -91,8 +91,9 @@ void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elem
 		}
 	}
 	//starting radius
-	double Radius = min_dist/2;
+	double Rad = min_dist/2;
 	int cluster_pos = 0;
+	double Radius;
 
 	std::vector<string>::iterator id_iter;
 	std::vector<std::vector<double>>::iterator it;	
@@ -100,7 +101,7 @@ void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elem
     {
     	 
 		query = *it; 
-		cube_find_hashFunction(g, query, mymap, k, w, num_of_buckets, position,Euclidean);
+		cube_find_hashFunction(g, query, coinmap, k, w, num_of_buckets, position,Euclidean);
 		int TmpPos = position;
 
 		// output <<std::endl<<"******************************************************************************************************************"<<std::endl;
@@ -114,15 +115,22 @@ void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elem
 		// Range_search(cube,g,query,TmpPos,M,probes,k,Radius,Euclidean,output,TrueDist);
 		// cube_Range_search(cube,g,query,TmpPos,M,probes,k,Radius,Euclidean,TrueDist);
 		
-		bool Stop_flag = 1;
-		while(1)
-		{
-			// Range_search(hashTables,g,query,fi,L,k,Radius,Euclidean,output,TrueDist);
-			cube_Range_search(assigned_elements, cube, g, query, queryset, TmpPos, M, probes, k, Radius, Euclidean, Stop_flag, cluster_pos);
-			
-			if (!Stop_flag)
-				break;
-			Radius = Radius * 2;
+		if (Rad != 0)
+		{	
+			Radius = Rad;
+			cout <<"Radius "<<Radius<<std::endl;
+			bool Stop_flag = 1;
+			while(1)
+			{
+				// Range_search(hashTables,g,query,fi,L,k,Radius,Euclidean,output,TrueDist);
+				cube_Range_search(assigned_elements, cube, g, query, queryset, TmpPos, M, probes, k, Radius, Euclidean, Stop_flag, cluster_pos);
+				
+				if (!Stop_flag)
+					break;
+				Radius = Radius * 2;
+				if (Radius >= (Rad*10))
+					break;
+			}
 		}
 		cluster_pos++;
 		// if (Radius != 0)

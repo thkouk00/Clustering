@@ -25,32 +25,32 @@ void Random_Initialization(std::vector<std::vector<double>>& Cluster_Table, std:
 			it = find(vec.begin(), vec.end(), rand_center);
 			if (it != vec.end())
 			{
-				cout <<"Element already exists in vec "<<*it<<std::endl;
+				// cout <<"Element already exists in vec "<<*it<<std::endl;
 				continue;
 			}
 			else
 			{
-				cout <<"new element "<<rand_center<<std::endl;
+				// cout <<"new element "<<rand_center<<std::endl;
 				vec.push_back(rand_center);
 				Cluster_Table.push_back(Points[rand_center]);
 				Cluster_position.push_back(rand_center);
-				for (int i=0;i<Points[rand_center].size();i++)
-					std::cout <<Points[rand_center][i]<<' ';
-				std::cout <<std::endl;
-				std::cout <<"And center is "<<rand_center<<" and "<<Cluster_position[Cluster_position.size()-1]<<std::endl;
+				// for (int i=0;i<Points[rand_center].size();i++)
+				// 	std::cout <<Points[rand_center][i]<<' ';
+				// std::cout <<std::endl;
+				// std::cout <<"And center is "<<rand_center<<" and "<<Cluster_position[Cluster_position.size()-1]<<std::endl;
 				break;
 			}
 		}
 	}
 	//tsekarw an ontos einai makria metaxi tous
-	for (int i=0;i<Cluster_Table.size();i++)
-	{
-		for (int j=i+1;j<Cluster_Table.size();j++)
-		{
-			double dist = Euclidean_Distance(Cluster_Table[i], Cluster_Table[j]);
-			cout <<"Distance between Cluster "<<i+1<<" and Cluster "<<j+1<<" is "<<dist<<std::endl;
-		}
-	}
+	// for (int i=0;i<Cluster_Table.size();i++)
+	// {
+	// 	for (int j=i+1;j<Cluster_Table.size();j++)
+	// 	{
+	// 		double dist = Euclidean_Distance(Cluster_Table[i], Cluster_Table[j]);
+	// 		cout <<"Distance between Cluster "<<i+1<<" and Cluster "<<j+1<<" is "<<dist<<std::endl;
+	// 	}
+	// }
 }
 
 void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vector<std::vector<double>>& Points, int& k)
@@ -60,12 +60,12 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 	// int points_size = Points.size();
 	std::uniform_int_distribution<int> distribution(0,Points.size()-1);
 	
-	cout <<"Points_size "<<Points.size()<<std::endl;;
+	// cout <<"Points_size "<<Points.size()<<std::endl;;
 	int centroid = distribution(generator);	
 
 	//holds position of clusters in points
 	Cluster_Table.push_back(Points[centroid]);
-	cout <<"FIRST CENTROID "<<centroid<<std::endl;
+	// cout <<"FIRST CENTROID "<<centroid<<std::endl;
 
 	//holds min dist for every Point
 	std::vector<int> point_pos;
