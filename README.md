@@ -7,9 +7,9 @@ Initialization:
 
 Assignment:
 - Lloyd's algorithm
-- LSH 
-- Hypercube
+- Assignment by Range search with LSH 
+- Assignment by Range search with Hypercube
 
 Update:
-- PAM improved like Lloyd's
-- K_means
+- K-means
+- Partitioning Around Medoids (PAM) improved like Lloyd’s
