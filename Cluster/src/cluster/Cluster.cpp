@@ -47,6 +47,7 @@ std::vector<Info> Cluster::get_array()
 
 void Cluster::clear_structure()
 {
+	std::cout <<"CLEANING"<<std::endl;
 	// for (int i=0;i<this->Array.size();i++)
 	// {
 	// 	(this->Array[i]).clear_info();

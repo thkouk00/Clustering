@@ -3,7 +3,8 @@
 using namespace std;
 
 extern std::vector<std::vector<double>> Distance_Table;
-extern std::vector<int> Cluster_position;
+// extern std::vector<int> Cluster_position;
+extern std::vector<int> tmp_Cluster_position;
 
 void Random_Initialization(std::vector<std::vector<double>>& Cluster_Table, std::vector<std::vector<double>>& Points,int& k)
 {
@@ -33,7 +34,7 @@ void Random_Initialization(std::vector<std::vector<double>>& Cluster_Table, std:
 				// cout <<"new element "<<rand_center<<std::endl;
 				vec.push_back(rand_center);
 				Cluster_Table.push_back(Points[rand_center]);
-				Cluster_position.push_back(rand_center);
+				tmp_Cluster_position.push_back(rand_center);
 				// for (int i=0;i<Points[rand_center].size();i++)
 				// 	std::cout <<Points[rand_center][i]<<' ';
 				// std::cout <<std::endl;
@@ -42,6 +43,7 @@ void Random_Initialization(std::vector<std::vector<double>>& Cluster_Table, std:
 			}
 		}
 	}
+	cout <<"EDWEW size "<<tmp_Cluster_position.size()<<std::endl;
 	//tsekarw an ontos einai makria metaxi tous
 	// for (int i=0;i<Cluster_Table.size();i++)
 	// {
@@ -179,7 +181,7 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 		point_pos.erase(point_pos.begin() + (mid - 1));
 		min_distance.erase(min_distance.begin()+(mid - 1));
 		Cluster_Table.push_back(Points[centroid]);
-		Cluster_position.push_back(centroid);
+		tmp_Cluster_position.push_back(centroid);
 		P.clear();
 	}
 	

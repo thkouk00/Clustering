@@ -26,8 +26,8 @@ void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& m
 	// int cluster_pos = 0;
 
 	// cube_storeDataset(dataset, id,input_file, table_lines,euclidean_flag,Radius);
-	if (k == -1)
-		k = (int)log2(dataset.size());
+	// if (k == -1)
+	// 	k = (int)log2(dataset.size());
 	int number_of_vertices = pow(2,k); 	
 	cout <<"Table_lines "<<dataset.size()<<std::endl;
 	cout <<"Number of vertices "<<number_of_vertices<<std::endl;

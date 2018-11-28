@@ -7,9 +7,10 @@ extern std::vector<int> Cluster_position;
 
 void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, bool& k_means_flag,double& objective)
 {
+	cout <<"In lloyds"<<std::endl;
 	for (int i=0;i<Cluster_Table.size();i++)
 		cluster[i]->clear_structure();
-	
+	cout <<"In lloyds2"<<std::endl;
 	// counter gia diki moy xrisi na vlepw posa shmeia kanei assign
 	int counter = 0;
 	std::vector<std::vector<double>>::iterator it;
@@ -46,7 +47,7 @@ void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, 
 		// 	cluster[cluster_pos]->InsertPoint(temp);
 		// 	continue;
 		// }
-
+		cout <<"In lloyds3"<<std::endl;
 		for (int j=0;j<Cluster_Table.size();j++)
 		{
 			double dist;

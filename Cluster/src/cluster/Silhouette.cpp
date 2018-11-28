@@ -6,7 +6,7 @@ extern std::vector<std::vector<double>> Distance_Table;
 extern std::vector<int> Cluster_position;
 
 //evaluate clustering
-double Silhouette(std::vector<std::vector<double>>& Cluster_Table, Cluster** cluster, int& number_of_clusters, bool& k_means_flag)
+double Silhouette(std::vector<std::vector<double>>& Cluster_Table, Cluster** cluster, int& number_of_clusters, bool& k_means_flag, std::ofstream& outputfile)
 {
 	bool flag = 0;
 	double silhouette_value = 0;
@@ -40,9 +40,11 @@ double Silhouette(std::vector<std::vector<double>>& Cluster_Table, Cluster** clu
 		}
 		if (Array.size() != 0)
 		{
-			silhouette_value += cluster_value/Array.size();
+			double val = cluster_value/Array.size();
+			silhouette_value += val;
 			cout <<"Sill "<<silhouette_value<<std::endl;
 			cout <<"Cluster val"<<cluster_value<<" and array size "<<Array.size()<<std::endl;
+			outputfile <<val<<", ";
 		}
 	}
 	// if (flag)
@@ -52,7 +54,8 @@ double Silhouette(std::vector<std::vector<double>>& Cluster_Table, Cluster** clu
 	// 	// silhouette_value = -1;
 	// }
 	// else
-		silhouette_value = silhouette_value/number_of_clusters;
+	silhouette_value = silhouette_value/number_of_clusters;
+	outputfile <<silhouette_value<<std::endl;
 
 	return silhouette_value;
 }
@@ -75,10 +78,10 @@ double avg_dist_sameCluster(Info& current_obj, std::vector<Info>& Array, bool& k
 		if (pointA == pointB)
 			continue;
 
-		if (!k_means_flag)
+		// if (!k_means_flag)
 			dist += Find_Distance(pointA, pointB, pointA_pos, pointB_pos);		
-		else
-			dist += Euclidean_Distance(pointA, pointB);
+		// else
+		// 	dist += Euclidean_Distance(pointA, pointB);
 	}
 	dist = dist/(Array.size() - 1);
 	return dist;
@@ -116,10 +119,10 @@ double avg_dist_neighbor(Info& current_obj, Cluster** cluster, bool& k_means_fla
 		std::vector<double> pointB = object.get_point();
 		int pointB_pos = object.get_Pos_Id();
 
-		if (!k_means_flag)
+		// if (!k_means_flag)
 			dist += Find_Distance(pointA, pointB, pointA_pos, pointB_pos);
-		else
-			dist += Euclidean_Distance(pointA, pointB);	
+		// else
+		// 	dist += Euclidean_Distance(pointA, pointB);	
 
 	}
 	dist = dist/(Array.size());
