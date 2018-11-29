@@ -2,8 +2,8 @@
 Algorithm Project_2 2018 
 
 Initialization:
+- Random selection of k points (simplest) 
 - K-means++
-- Random
 
 Assignment:
 - Lloyd's algorithm
