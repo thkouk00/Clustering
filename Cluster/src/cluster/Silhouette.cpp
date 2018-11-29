@@ -118,6 +118,10 @@ double avg_dist_neighbor(Info& current_obj, Cluster** cluster, bool& k_means_fla
 	// }
 	// cout <<"Array size "<<Array.size()<<std::endl;
 	int pointA_pos = current_obj.get_Pos_Id();
+	int sec_best = current_obj.get_secondBestCluster();
+	if (sec_best == -1)
+		return 0;
+	
 	std::vector<Info> Array = cluster[current_obj.get_secondBestCluster()]->get_array();
 	cout <<"****Array SIZe "<<Array.size()<<std::endl;
 	if (Array.size() == 0)

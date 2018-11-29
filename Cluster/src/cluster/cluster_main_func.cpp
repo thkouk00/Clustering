@@ -95,6 +95,11 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 			else if (r == 5)
 				outputfile <<3<<" x "<<2<<std::endl;
 			
+			if (metric_flag == 1)
+				outputfile <<"Metric: Euclidean"<<std::endl;
+			else
+				outputfile <<"Metric: Cosine"<<std::endl;
+
 			double old_objective = -1;
 			int max_iter = 0;
 			bool flag = 1;
@@ -226,6 +231,7 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 			cout <<"ITERS "<<max_iter<<std::endl;
 			outputfile <<"Silhouette: ";
 			double silhouette = Silhouette(Cluster_Table, cluster, k, k_means_flag, outputfile);
+			outputfile <<std::endl;
 		}
 		Cluster_Table.clear();
 		tmp_Cluster_Table.clear();
