@@ -4,6 +4,7 @@ using namespace std;
 
 extern std::vector<std::vector<double>> Distance_Table;
 extern std::vector<int> Cluster_position;
+extern bool metric;
 
 void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, bool& k_means_flag,double& objective)
 {
@@ -54,8 +55,17 @@ void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, 
 			if (!k_means_flag)
 				dist = Find_Distance(Points[i], Cluster_Table[j], i, Cluster_position[j]);
 			else
-				dist = Euclidean_Distance(Points[i], Cluster_Table[j]);
+			{
+				if (metric == 1)
+					dist = Euclidean_Distance(Points[i], Cluster_Table[j]);
+				else
+				{
+					dist = Cosine_Similarity(Points[i], Cluster_Table[j]);
+					cout <<"Cos "<<dist<<std::endl;
+				}
+			}
 			
+			cout <<"Dist is "<<dist<<std::endl;
 			if (j == 0)
 			{
 				min_dist = dist;

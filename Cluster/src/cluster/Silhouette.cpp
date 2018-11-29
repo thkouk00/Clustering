@@ -4,6 +4,7 @@ using namespace std;
 
 extern std::vector<std::vector<double>> Distance_Table;
 extern std::vector<int> Cluster_position;
+extern bool metric;
 
 //evaluate clustering
 double Silhouette(std::vector<std::vector<double>>& Cluster_Table, Cluster** cluster, int& number_of_clusters, bool& k_means_flag, std::ofstream& outputfile)
@@ -15,6 +16,8 @@ double Silhouette(std::vector<std::vector<double>>& Cluster_Table, Cluster** clu
 		double cluster_value = 0;
 		std::vector<Info> Array = cluster[i]->get_array();
 		std::cout <<"SIl ARRAY SIZE "<<Array.size()<<std::endl;
+		if (Array.size() == 0)
+			continue;
 		for (int j=0;j<Array.size();j++)
 		{
 			Info object = Array[j];
@@ -63,6 +66,7 @@ double Silhouette(std::vector<std::vector<double>>& Cluster_Table, Cluster** clu
 //average distance of i to other objects in same cluster
 double avg_dist_sameCluster(Info& current_obj, std::vector<Info>& Array, bool& k_means_flag)
 {
+	cout <<"Ypologismos A"<<std::endl;
 	std::vector<Info>::iterator it;
 	double dist = 0;
 	std::vector<double> pointA = current_obj.get_point();
@@ -78,10 +82,15 @@ double avg_dist_sameCluster(Info& current_obj, std::vector<Info>& Array, bool& k
 		if (pointA == pointB)
 			continue;
 
-		// if (!k_means_flag)
+		if (!k_means_flag)
 			dist += Find_Distance(pointA, pointB, pointA_pos, pointB_pos);		
-		// else
-		// 	dist += Euclidean_Distance(pointA, pointB);
+		else
+		{
+			if (metric == 1)
+				dist += Euclidean_Distance(pointA, pointB);
+			else
+				dist += Cosine_Similarity(pointA, pointB);
+		}
 	}
 	dist = dist/(Array.size() - 1);
 	return dist;
@@ -90,6 +99,7 @@ double avg_dist_sameCluster(Info& current_obj, std::vector<Info>& Array, bool& k
 // average distance of i to objects in next best (neighbor) cluster
 double avg_dist_neighbor(Info& current_obj, Cluster** cluster, bool& k_means_flag)
 {
+	cout <<"Ypologismos B"<<std::endl;
 	// cout <<"MPIKA"<<std::endl;
 	double dist = 0;
 	std::vector<double> pointA = current_obj.get_point();
@@ -97,9 +107,7 @@ double avg_dist_neighbor(Info& current_obj, Cluster** cluster, bool& k_means_fla
 	for (int i=0;i<pointA.size();i++)
 		cout <<pointA[i]<<' ';
 	cout <<std::endl;
-	int pointA_pos = current_obj.get_Pos_Id();
 	// cout <<"PIRA POINT "<<current_obj.get_secondBestCluster()<<std::endl;
-	std::vector<Info> Array = cluster[current_obj.get_secondBestCluster()]->get_array();
 	// for (int i=0;i<Cluster_position.size();i++)
 	// {
 	// 	if (current_obj.get_secondBestCluster() == Cluster_position[i])
@@ -109,6 +117,8 @@ double avg_dist_neighbor(Info& current_obj, Cluster** cluster, bool& k_means_fla
 	// 	}
 	// }
 	// cout <<"Array size "<<Array.size()<<std::endl;
+	int pointA_pos = current_obj.get_Pos_Id();
+	std::vector<Info> Array = cluster[current_obj.get_secondBestCluster()]->get_array();
 	cout <<"****Array SIZe "<<Array.size()<<std::endl;
 	if (Array.size() == 0)
 		return 0;
@@ -119,10 +129,15 @@ double avg_dist_neighbor(Info& current_obj, Cluster** cluster, bool& k_means_fla
 		std::vector<double> pointB = object.get_point();
 		int pointB_pos = object.get_Pos_Id();
 
-		// if (!k_means_flag)
+		if (!k_means_flag)
 			dist += Find_Distance(pointA, pointB, pointA_pos, pointB_pos);
-		// else
-		// 	dist += Euclidean_Distance(pointA, pointB);	
+		else
+		{
+			if (metric == 1)
+				dist += Euclidean_Distance(pointA, pointB);
+			else
+				dist += Cosine_Similarity(pointA, pointB);	
+		}
 
 	}
 	dist = dist/(Array.size());

@@ -2,6 +2,7 @@
 
 extern std::vector<std::vector<double>> Distance_Table;
 extern std::vector<int> Cluster_position;
+extern bool metric;
 
 long double Euclidean_Distance(std::vector<double> & A, std::vector<double> &B)
 {
@@ -81,7 +82,13 @@ double Find_Distance(std::vector<double>& A, std::vector<double>& B, int& posA, 
 	else
 	{
 		// std::cout <<"HERE 3"<<std::endl;
-		distance = Euclidean_Distance(A, B);
+		if (metric == 1)
+			distance = Euclidean_Distance(A, B);
+		else
+		{
+			distance = Cosine_Similarity(A, B);
+			std::cout <<"Cosine dist "<<distance<<std::endl;
+		}
 		Distance_Table[min][position] = distance;
 		// std::cout <<"HERE 4 evala se "<<min<<" ,"<<position-1<<" dist "<<distance<<std::endl;
 	}

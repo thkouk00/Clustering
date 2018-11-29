@@ -1,7 +1,7 @@
 #include "../../include/LSH/Range_search.h"
 using namespace std;
 
-
+extern bool metric;
 
 void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable **hashTables, std::vector<std::vector<int>> &g, std::vector<double> &query, std::vector<std::vector<double>> &queryset, std::vector<int> &fi, int &L, int &k, double &R, bool Euclidean, bool& Stop, int& cluster_pos)
 {
@@ -51,7 +51,8 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 			// if (Qit != queryset.end())
 			// 	continue;
 
-			if (Euclidean)
+			// if (Euclidean)
+			if (metric == 1)
 			{
 				// find distance for trueNN_neighbor
 				distance = Euclidean_Distance(query,p);

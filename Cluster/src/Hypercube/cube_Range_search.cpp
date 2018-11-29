@@ -2,6 +2,7 @@
 
 using namespace std;
 
+extern bool metric;
 
 // void Range_search(HashTable *cube, std::vector<int> &g, std::vector<double> &query, int &position, int &M, int &probes, int &k, double &R, bool Euclidean, std::ofstream &output, double &TrueDist)
 void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable *cube, std::vector<int> &g, std::vector<double> &query, std::vector<std::vector<double>> &queryset, int &position, int &M, int &probes, int &k, double &R, bool Euclidean, bool& Stop, int& cluster_pos)
@@ -76,7 +77,8 @@ void cube_Range_search(std::map<std::vector<double>, MapNode>& assigned_elements
 			// if (Qit != queryset.end())
 			// 	continue;
 
-			if (Euclidean)
+			// if (Euclidean)
+			if (metric == 1)
 				distance = Euclidean_Distance(query,p);
 			else
 				distance = Cosine_Similarity(query,p);

@@ -2,6 +2,10 @@
 
 using namespace std;
 
+extern std::vector<std::vector<double>> Distance_Table;
+extern std::vector<int> Cluster_position;
+extern bool metric;
+
 //dataset = Points , queryset = Cluster_Table
 void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, HashTable** hashTables, Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, int& k, int& L, int& w, bool& k_means_flag)
 {	
@@ -11,11 +15,9 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
     
     //number of buckets in each hash Table
     int number_of_buckets;
-    if (euclidean_flag)
-    {
+    // if (euclidean_flag)
+    if (metric == 1)
     	number_of_buckets = dataset.size()/4;
-		// number_of_buckets = hashTable_lines/4;
-    }
 	else
 		number_of_buckets = pow(2,k);
 
@@ -50,7 +52,16 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 				{
 					// if (queryset[l] == dataset[i])
 					// 	continue;
-					double temp_dist = Euclidean_Distance(queryset[l], dataset[i]);
+					double temp_dist;
+					if (k_means_flag)
+						temp_dist = Find_Distance(queryset[l], dataset[i],Cluster_position[l],i);
+					else
+					{
+						if (metric == 1)
+							temp_dist = Euclidean_Distance(queryset[l], dataset[i]);
+						else
+							temp_dist = Cosine_Similarity(queryset[l], dataset[i]);
+					}	
 					
 					if (sec_best_dist > temp_dist && temp_dist > Dist)
 					{
@@ -81,7 +92,11 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 			//find nearest centroid
 			for (int j=0;j<queryset.size();j++)
 			{
-				tmp_dist = Euclidean_Distance(dataset[i], queryset[j]);
+				if (metric == 1)
+					tmp_dist = Euclidean_Distance(dataset[i], queryset[j]);
+				else
+					tmp_dist = Cosine_Similarity(dataset[i], queryset[j]);
+				
 				if (j == 0)
 				{
 					position = j;

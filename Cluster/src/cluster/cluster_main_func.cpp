@@ -5,9 +5,11 @@ using namespace std;
 std::vector<std::vector<double>> Distance_Table;
 std::vector<int> Cluster_position;
 std::vector<int> tmp_Cluster_position;
+bool metric;
 
-void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std::string>& id, std::string output_file, int& k, int& k_lsh, int& k_cube, int& L, int& w, int& M, int& probes)
+void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std::string>& id, std::string output_file, int& k, int& k_lsh, int& k_cube, int& L, int& w, int& M, int& probes, bool& metric_flag)
 {
+	metric = metric_flag;
 	//write output to file
 	std::ofstream outputfile;
 	outputfile.open (output_file, ios::out | ios::trunc);
@@ -30,17 +32,25 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 		cluster[i] = new Cluster;
 
 	//construct LSH or Hypercube structure only once 
-	bool LSH_flag = 1;
+	bool LSH_flag;
 	// bool cube_flag = 0;
 	HashTable *cube;
 	HashTable **hashTables;
 	
-	int number_of_buckets = Points.size()/4;
+	int number_of_buckets;
+	if (metric == 1)
+		number_of_buckets = Points.size()/4;
+	else
+		number_of_buckets = pow(2,k_lsh);
+	
 	hashTables = new HashTable*[L];
 	for (int i=0;i<L;i++)
 	{
 		hashTables[i] = new HashTable(number_of_buckets);
-		hashTables[i]->hashDataset(Points,id,k_lsh,w);
+		if (metric == 1)
+			hashTables[i]->hashDataset(Points,id,k_lsh,w);
+		else
+			hashTables[i]->hashDataset(Points,id,k_lsh);
 	}
 
 	// Hypercube Structure
@@ -51,7 +61,10 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 	cube = new HashTable(number_of_buckets);
 	// na ftiaxv kai gia cosine
 	// Euclidean metric
-	cube->hashDataset(Points, id, coinmap, k_cube, w);
+	if (metric == 1)
+		cube->hashDataset(Points, id, coinmap, k_cube, w);
+	else
+		cube->hashDataset(Points, id, k_cube);
 
 	//loop for initialization
 	for (int q=0;q<2;q++)
@@ -88,9 +101,9 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 			
 			LSH_flag = 0;
 			if ( r % 2 == 0)
-				k_means_flag = 0;
-			else
 				k_means_flag = 1;
+			else
+				k_means_flag = 0;
 			
 			std::map<std::vector<double>, std::vector<double>> new_map;
 			std::map<std::vector<double>, std::vector<double>> old_map;
@@ -159,9 +172,9 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 				}
 
 				if (r % 2 == 0)
-					PAM_improved(cluster, Points, Cluster_Table, id,flag);
-				else
 					k_means(cluster, Points, Cluster_Table, id);
+				else
+					PAM_improved(cluster, Points, Cluster_Table, id,flag);
 				
 				max_iter++;
 				if (k_means_flag)
@@ -177,7 +190,20 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 				// 	cout <<"BRETHIKE MISTI MOY"<<std::endl;
 				// cout <<"------------------------------------------------------"<<std::endl;
 				std::vector<Info> v = cluster[i]->get_array();
-				outputfile <<"CLUSTER-"<<i+1<<" {size: "<<cluster[i]->get_array().size()<<", centroid: "<<id[Cluster_position[i]]<<"}"<<std::endl;
+				if (!k_means_flag)
+					outputfile <<"CLUSTER-"<<i+1<<" {size: "<<cluster[i]->get_array().size()<<", centroid: "<<id[Cluster_position[i]]<<"}"<<std::endl;
+				else
+				{
+					outputfile <<"CLUSTER-"<<i+1<<" {size: "<<cluster[i]->get_array().size()<<", centroid: ";
+					for (int j=0;j<Cluster_Table[i].size();j++)
+					{
+						if (j == Cluster_Table[i].size()-1)
+							outputfile <<Cluster_Table[i][j]<<"}"<<std::endl;
+						else	
+							outputfile <<Cluster_Table[i][j]<<", ";
+					}
+
+				}
 				// cout <<std::endl;
 				// cout <<"**ASSIGNED POINTS size **"<<v.size()<<std::endl;	
 				// for (int j=0;j<v.size();j++)

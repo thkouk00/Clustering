@@ -2,6 +2,10 @@
 
 using namespace std;
 
+extern std::vector<std::vector<double>> Distance_Table;
+extern std::vector<int> Cluster_position;
+extern bool metric;
+
 void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, HashTable* cube, Cluster** cluster, std::vector<std::vector<double>>& dataset, std::vector<std::vector<double>>& queryset, std::vector<std::string>& id, std::map<int, bool>& coinmap, int& k, int& M, int& probes, int& w, bool& k_means_flag)
 {
 	// std::map<int,bool> mymap;
@@ -61,8 +65,17 @@ void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& m
 				{
 					// if (queryset[l] == dataset[i])
 					// 	continue;
-					double temp_dist = Euclidean_Distance(queryset[l], dataset[i]);
-					
+					double temp_dist;
+					if (k_means_flag)
+						temp_dist = Find_Distance(queryset[l], dataset[i], Cluster_position[l], i);
+					else
+					{
+						if (metric == 1)
+							temp_dist = Euclidean_Distance(queryset[l], dataset[i]);
+						else
+							temp_dist = Cosine_Similarity(queryset[l], dataset[i]);	
+					}
+				
 					if (sec_best_dist > temp_dist && temp_dist > Dist)
 					{
 						sec_best_dist = temp_dist;
@@ -92,7 +105,11 @@ void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& m
 			//find nearest centroid
 			for (int j=0;j<queryset.size();j++)
 			{
-				tmp_dist = Euclidean_Distance(dataset[i], queryset[j]);
+				if (metric == 1)
+					tmp_dist = Euclidean_Distance(dataset[i], queryset[j]);
+				else
+					tmp_dist = Cosine_Similarity(dataset[i], queryset[j]);
+				
 				if (j == 0)
 				{
 					position = j;
@@ -126,49 +143,3 @@ void cube_Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& m
 		}
 	}
 }
-
-
-
-// void cube_Search_Neighbors(char* input_file, char* query_file, int& k, int& w, int& M, int& probes)
-// {
-// 	std::map<int,bool> mymap;
-// 	std::map<int,bool>::iterator it;
-
-// 	std::vector<std::string> id;
-// 	std::vector<std::vector<double>> dataset;
-// 	bool euclidean_flag = 1;
-// 	double Radius = 0.0;
-// 	int table_lines = 0;
-
-// 	cube_storeDataset(dataset, id,input_file, table_lines,euclidean_flag,Radius);
-// 	if (k == -1)
-// 		k = (int)log2(table_lines);
-// 	int number_of_vertices = pow(2,k); 	
-// 	cout <<"Table_lines "<<table_lines<<std::endl;
-// 	cout <<"Number of vertices "<<number_of_vertices<<std::endl;
-	
-// 	// hypercube structure to hold vertices
-// 	cube_HashTable *cube = new cube_HashTable(number_of_vertices);
-// 	if (euclidean_flag)
-// 		cube->cube_hashDataset(dataset, id, mymap, k, w);
-// 	else
-// 		cube->cube_hashDataset(dataset, id, k);
-	
-// 	int queryset_lines = 0;
-// 	std::vector<std::vector<double>> queryset;
-// 	id.clear();
-// 	cube_storeDataset(queryset, id,query_file, queryset_lines,euclidean_flag,Radius);
-
-// 	// search neighbors from query_file ***Euclidean Distance***
-// 	// search_neighbors(cube, id, queryset, mymap, M, probes,k, w, number_of_vertices, Radius,euclidean_flag, outputfile);
-// 	cube_search_neighbors(cube, id, queryset, mymap, M, probes,k, w, number_of_vertices, Radius,euclidean_flag);
-
-// 	//free memory
-// 	delete cube;
-	
-// 	free(input_file);
-// 	free(query_file);
-// 	// input_file = NULL;
-// 	// query_file = NULL;
-
-// }

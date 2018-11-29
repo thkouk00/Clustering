@@ -1,6 +1,7 @@
 #include "../../include/LSH/general_functions.h"
 
 using namespace std;
+extern bool metric;
 
 //stores Dataset and QuerySet
 void storeDataset(std::vector<std::vector<double>> &dataset, std::vector<std::string> &id,char *input_file,int &hashTable_lines, bool &euclidean_flag, double &Radius)
@@ -85,7 +86,12 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 	{
 		for (int j=i+1;j<num_of_clusters;j++)
 		{
-			double dist = Euclidean_Distance(queryset[i], queryset[j]);
+			double dist;
+			if (metric == 1)
+				dist = Euclidean_Distance(queryset[i], queryset[j]);
+			else
+				dist = Cosine_Similarity(queryset[i], queryset[j]);
+
 			if (min_dist > dist)
 				min_dist = dist;
 		}
@@ -247,7 +253,8 @@ int find_hashFunction(std::vector<int> &g, std::vector<double> &query, int &k, i
 			// double in_product = std::inner_product(row->begin(), row->end(), v.begin(), 0);
 			double in_product = std::inner_product(v.begin(), v.end(), query.begin(), 0);
 			
-			if (Euclidean)
+			// if (Euclidean)
+			if (metric == 1)
 			{
 				//random pick of t in [0,w) , double
 				t = ((double)rand() / (RAND_MAX + 1.0)) * w ;
@@ -275,7 +282,8 @@ int find_hashFunction(std::vector<int> &g, std::vector<double> &query, int &k, i
 		//empty vector to take new values
 		v.clear();
 	}
-	if (Euclidean)
+	// if (Euclidean)
+	if (metric == 1)
 	{
 		std::hash<std::string> hash_fn;
 		string hashstr;

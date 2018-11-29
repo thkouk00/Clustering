@@ -1,6 +1,7 @@
 #include "../../include/Hypercube/cube_general_functions.h"
 
 using namespace std;
+extern bool metric;
 
 //stores Dataset and QuerySet
 void cube_storeDataset(std::vector<std::vector<double>> &dataset, std::vector<std::string> &id,char *input_file,int &hashTable_lines, bool &euclidean_flag, double &Radius)
@@ -178,7 +179,8 @@ int cube_find_hashFunction(std::vector<int> &g, std::vector<double> &query, std:
 
 			double in_product = std::inner_product(v.begin(), v.end(), query.begin(), 0);
 			
-			if (Euclidean)
+			// if (Euclidean)
+			if (metric == 1)
 			{
 				//random pick of t in [0,w) , double
 				t = ((double)rand() / (RAND_MAX + 1.0)) * w ;
@@ -222,7 +224,8 @@ int cube_find_hashFunction(std::vector<int> &g, std::vector<double> &query, std:
 		//empty vector to take new values
 		v.clear();
 	}
-	if (Euclidean)
+	// if (Euclidean)
+	if (metric == 1)
 		position = binarytodecimal(tmpv);
 	else
 		position = binarytodecimal(g);

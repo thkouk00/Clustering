@@ -18,6 +18,6 @@
 #include "../../include/LSH/HashTable.h"
 #include "../../include/Hypercube/cube_HashTable.h"
 
-void cluster_main_func(std::vector<std::vector<double>>&, std::vector<std::string>& id, std::string, int&, int&, int&, int&, int&, int&, int&);
+void cluster_main_func(std::vector<std::vector<double>>&, std::vector<std::string>& id, std::string, int&, int&, int&, int&, int&, int&, int&, bool&);
 
 #endif

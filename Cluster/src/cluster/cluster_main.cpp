@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
 	std::string input_file;
 	std::string output_file;
 	std::string conf_file;
-	std::string metric;
+	std::string metric = "euclidean";
 	//read args
 	for (int i=0;i<argc;i++)
 	{
@@ -89,6 +89,13 @@ int main(int argc, char const *argv[])
 				exit(1);
 			}
 		}
+	}
+	
+	// check if arguments are correct
+	if (input_file.size() == 0 || output_file.size() == 0)
+	{
+		cout <<"Please give correct input and output file"<<std::endl;
+		exit(-1);
 	}
 	
 	int k = 3;		//cluster number
@@ -179,7 +186,12 @@ int main(int argc, char const *argv[])
 		tempv.clear();
 	}
 	cout <<"AFTER size "<<Points.size()<<std::endl;
-	cluster_main_func(Points, id, output_file, k, k_lsh, k_cube, L, w, M, probes);
+	bool metric_flag;
+	if (metric == "euclidean")
+		metric_flag = 1;
+	else if (metric == "cosine")
+		metric_flag = 0;
+	cluster_main_func(Points, id, output_file, k, k_lsh, k_cube, L, w, M, probes, metric_flag);
 	
 	return 0;
 }

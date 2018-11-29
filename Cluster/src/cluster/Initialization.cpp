@@ -185,22 +185,12 @@ void K_means_plusplus(std::vector<std::vector<double>>& Cluster_Table, std::vect
 		P.clear();
 	}
 	
-	//print clusters to see the actual centroids
-	for (int i=0;i<Cluster_Table.size();i++)
-	{
-		std::vector<double> v = Cluster_Table[i];
-		for (int j=0;j<v.size();j++)
-			cout <<v[j]<<' ';
-		cout <<std::endl;
-	}
-
-	//tsekarw an ontos einai makria metaxi tous
-	for (int i=0;i<Cluster_Table.size();i++)
-	{
-		for (int j=i+1;j<Cluster_Table.size();j++)
-		{
-			double dist = Euclidean_Distance(Cluster_Table[i], Cluster_Table[j]);
-			cout <<"Distance between Cluster "<<i+1<<" and Cluster "<<j+1<<" is "<<dist<<std::endl;
-		}
-	}
+	// //print clusters to see the actual centroids
+	// for (int i=0;i<Cluster_Table.size();i++)
+	// {
+	// 	std::vector<double> v = Cluster_Table[i];
+	// 	for (int j=0;j<v.size();j++)
+	// 		cout <<v[j]<<' ';
+	// 	cout <<std::endl;
+	// }
 }
