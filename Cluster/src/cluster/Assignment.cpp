@@ -8,11 +8,10 @@ extern bool metric;
 
 void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, bool& k_means_flag,double& objective)
 {
-	cout <<"In lloyds"<<std::endl;
 	for (int i=0;i<Cluster_Table.size();i++)
 		cluster[i]->clear_structure();
-	cout <<"In lloyds2"<<std::endl;
-	// counter gia diki moy xrisi na vlepw posa shmeia kanei assign
+	
+	// just check the amount of assigned points
 	int counter = 0;
 	std::vector<std::vector<double>>::iterator it;
 	for (int i=0;i<Points.size();i++)
@@ -21,34 +20,7 @@ void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, 
 		int second_best = -1;
 		double min_dist = 0;
 		double second_dist = 999999;
-		// check if Point[i] is centroid
-		// it = find(Cluster_Table.begin(),Cluster_Table.end(),Points[i]);
-		// // Point is centroid
-		// if (it != Cluster_Table.end())
-		// {
-		// 	cout <<"EEW"<<std::endl;
-		// 	map[Points[i]] = *it;
-		// 	for (int j =0 ; j<Cluster_Table.size(); j++)
-		// 	{
-		// 		if (*it == Cluster_Table[j])
-		// 		{
-		// 			cluster_pos = j;
-		// 			continue;
-		// 		}
-		// 		double 	tmp_dist = Find_Distance(Points[i], Cluster_Table[j], i, Cluster_position[j]);
-		// 		if (second_dist > tmp_dist)
-		// 		{
-		// 			second_dist = tmp_dist;
-		// 			second_best = j;
-		// 		}	
-		// 	}
-		// 	min_dist = 0;
-		// 	cout <<"EEW2"<<std::endl;
-		// 	Info temp(Points[i],point_id[i],i,second_best,min_dist);
-		// 	cluster[cluster_pos]->InsertPoint(temp);
-		// 	continue;
-		// }
-		cout <<"In lloyds3"<<std::endl;
+		
 		for (int j=0;j<Cluster_Table.size();j++)
 		{
 			double dist;
@@ -59,13 +31,9 @@ void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, 
 				if (metric == 1)
 					dist = Euclidean_Distance(Points[i], Cluster_Table[j]);
 				else
-				{
 					dist = Cosine_Similarity(Points[i], Cluster_Table[j]);
-					cout <<"Cos "<<dist<<std::endl;
-				}
 			}
 			
-			cout <<"Dist is "<<dist<<std::endl;
 			if (j == 0)
 			{
 				min_dist = dist;
@@ -74,7 +42,6 @@ void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, 
 			else if (min_dist > dist)
 			{
 				// update second best cluster
-				cout <<"Allagi kentroy apo cluster "<<cluster_pos<<" me "<<min_dist<<" se kentro "<<j<<" me "<<dist<<std::endl;
 				second_dist = min_dist;
 				second_best = cluster_pos;
 				// update new cluster position
@@ -83,26 +50,19 @@ void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, 
 			}
 			else if (second_dist > dist && dist != min_dist)
 			{
-				cout <<"*Allagi second best apo cluster "<<second_best<<" me "<<second_dist<<" se kentro "<<j<<" me "<<dist<<" me min_dist "<<min_dist<<std::endl;
 				second_dist = dist;
 				second_best = j;
 			}
-			if (Points[i] == Cluster_Table[j])
-			{
-				cout <<"---Cluster kai Point idia cluster number = "<<j<<" antistoixei sto Point_shmeio "<<Cluster_position[j]<<" kai point number = "<<i<<std::endl;
-			}
 		}
 		counter++;
-		// objective += pow(min_dist,2);
-		//exei brethei to kontinotero cluster
-		cout <<"Actual Point "<<i+1<<" Cluster "<<cluster_pos<<" Second best "<<second_best<<std::endl;
+		
+		//insert point to its nearest cluster
 		map[Points[i]] = Cluster_Table[cluster_pos];
 		Info temp(Points[i],point_id[i],i,second_best,min_dist);
-		cout <<"Inserting in cluster "<<cluster_pos<<std::endl;
 		cluster[cluster_pos]->InsertPoint(temp);
 	}
 
-	std::cout <<"ASSIGNED "<<counter<<" elements"<<std::endl;
+	// std::cout <<"ASSIGNED "<<counter<<" elements"<<std::endl;
 }
 
 void LSH_Assignment(std::map<std::vector<double>, std::vector<double>>& map, HashTable** hashTables, Cluster **cluster, std::vector<std::vector<double>>& Points, std::vector<std::vector<double>>& Cluster_Table, std::vector<std::string>& point_id, int& k_lsh, int& L, int& w, bool& k_means_flag)

@@ -17,14 +17,13 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 	std::vector<std::vector<double>> Cluster_Table;
 	std::vector<std::vector<double>> tmp_Cluster_Table;
 	
+	// array to hold values 
 	for (int i=0;i<Points.size();i++)
 	{
 		std::vector<double> v;
 		Distance_Table.push_back(v);
-		// for (int j=i+1;j<Points.size();j++)
 		for (int j=i;j<Points.size();j++)
 			Distance_Table[i].push_back(0);
-		// cout <<"Size i "<<i<<" is "<<Distance_Table[i].size()<<std::endl;
 	}	
 
 	Cluster** cluster = new Cluster*[k];
@@ -59,12 +58,11 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 		k_cube = (int)log2(Points.size());
 	number_of_buckets = pow(2,k_cube); 
 	cube = new HashTable(number_of_buckets);
-	// na ftiaxv kai gia cosine
 	// Euclidean metric
 	if (metric == 1)
 		cube->hashDataset(Points, id, coinmap, k_cube, w);
 	else
-		cube->hashDataset(Points, id, k_cube);
+		cube->hashDataset(Points, id, k_cube);		//cosine metric
 
 	//loop for initialization
 	for (int q=0;q<2;q++)
@@ -113,13 +111,13 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 			std::map<std::vector<double>, std::vector<double>> new_map;
 			std::map<std::vector<double>, std::vector<double>> old_map;
 			
+			auto start = chrono::high_resolution_clock::now();
 			while (flag)
 			{		
 				double current_objective = 0;
-				// cout <<"HERE"<<std::endl;
+				
 				if (r == 0 || r == 1)
 				{
-					cout <<"Lloyds Assign"<<std::endl;
 					Lloyds_Assignment(new_map, cluster, Points, Cluster_Table, id, k_means_flag, current_objective);
 				}
 				else if (r == 2 || r == 3)
@@ -131,11 +129,6 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 				{
 					Hypercube_Assignment(new_map, cube, cluster, Points, Cluster_Table, id, coinmap, k_cube, M, probes, w, k_means_flag);
 				}
-				
-				// cout <<"OBJECTIVE "<<abs(current_objective - old_objective)<<std::endl;
-				// if ( (abs(current_objective - old_objective) <= 0.02) && max_iter != 0 )
-				// 	break;
-				// old_objective = current_objective;
 				
 				if (LSH_flag)
 				{
@@ -153,16 +146,9 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 				{
 					//no change in assignments
 					if (new_map == old_map)
-					{
-						cout <<"NEWMAP size "<<new_map.size()<<std::endl;
-						cout <<"OLDMAP size "<<old_map.size()<<std::endl;
-						cout <<"Stopped from map"<<std::endl;
 						break;
-					}
 					else
 					{
-						cout <<"NEWMAP size "<<new_map.size()<<std::endl;
-						cout <<"OLDMAP size "<<old_map.size()<<std::endl;
 						std::vector<std::vector<double>>::iterator pointIt;
 						for (int n=0;n<Points.size();n++)
 						{
@@ -186,14 +172,11 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 					new_map.clear();
 			}
 
-			cout <<"CLUSTER TABLE "<<Cluster_Table.size()<<std::endl;
+			auto end = chrono::high_resolution_clock::now();
+			outputfile <<"clustering time: "<<chrono::duration_cast<chrono::seconds>(end-start).count()<<std::endl;
+
 			for (int i=0;i<Cluster_Table.size();i++)
 			{
-				// std::vector<std::vector<double>>::iterator iterat;
-				// iterat = find(Points.begin(),Points.end(),Cluster_Table[i]);
-				// if (iterat != Points.end())
-				// 	cout <<"BRETHIKE MISTI MOY"<<std::endl;
-				// cout <<"------------------------------------------------------"<<std::endl;
 				std::vector<Info> v = cluster[i]->get_array();
 				if (!k_means_flag)
 					outputfile <<"CLUSTER-"<<i+1<<" {size: "<<cluster[i]->get_array().size()<<", centroid: "<<id[Cluster_position[i]]<<"}"<<std::endl;
@@ -209,26 +192,8 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 					}
 
 				}
-				// cout <<std::endl;
-				// cout <<"**ASSIGNED POINTS size **"<<v.size()<<std::endl;	
-				// for (int j=0;j<v.size();j++)
-				// {
-				// 	Info info = v[j];
-				// 	std::vector<double> point;
-				// 	int id;
-				// 	point = info.get_point();
-				// 	std::vector<std::vector<double>>::iterator iterat;
-				// 	iterat = find(Points.begin(),Points.end(),point);
-				// 	if (iterat != Points.end())
-				// 		cout <<"BRETHIKE MISTI MOY"<<std::endl;
-				// 	id = info.get_Pos_Id();
-				// 	for (int l=0;l<point.size();l++)
-				// 		cout <<point[l]<<',';
-				// 	cout <<" and point id "<<id<<std::endl;
-				// }
-				// cout <<"------------------------------------------------------"<<std::endl;
 			}
-			cout <<"ITERS "<<max_iter<<std::endl;
+			
 			outputfile <<"Silhouette: ";
 			double silhouette = Silhouette(Cluster_Table, cluster, k, k_means_flag, outputfile);
 			outputfile <<std::endl;
@@ -240,7 +205,6 @@ void cluster_main_func(std::vector<std::vector<double>>& Points, std::vector<std
 
 	}
 	cout <<"END CLUSTERING"<<std::endl;	
-	// cout <<"Silhouette value "<<silhouette<<std::endl;
 	
 
 	//close files

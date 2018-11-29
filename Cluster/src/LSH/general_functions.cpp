@@ -98,13 +98,11 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 	}
 	//starting radius
 	double Rad = min_dist/2;
-	cout <<"initial rad "<<Rad<<std::endl;
+	// cout <<"initial rad "<<Rad<<std::endl;
 	double Radius;
 	int cluster_pos = 0;
 
 	std::vector<string>::iterator id_iter;
-	// std::vector<std::vector<double>>::iterator it;	
-	// for (id_iter=id.begin(), it=queryset.begin();it!=queryset.end();it++, id_iter++)
     for (int i=0;i<queryset.size();i++)
     {
     	counter++;
@@ -119,12 +117,6 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 			fi.push_back(tmpfi);
 			tmpg.erase(tmpg.begin(),tmpg.end());
 		}
-
-		// output <<std::endl<<"******************************************************************************************************************"<<std::endl;
-		// output <<"Query: "<<*id_iter<<std::endl;
-		cout <<std::endl<<"******************************************************************************************************************"<<std::endl;
-		// cout <<"Query: "<<*id_iter<<std::endl;
-		cout <<"Query: "<<i<<std::endl;
 		
 		long double dist = 0;
 		string id;
@@ -142,7 +134,7 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 				break;
 		}
 		cluster_pos++;
-		cout <<"NEO QUERY"<<std::endl;
+
 		// if (Radius != 0)
 		// {
 		// 	//ApproxNN_search
@@ -161,9 +153,6 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 		g.erase(g.begin(),g.end());
 		fi.erase(fi.begin(),fi.end());
 	}
-
-	
-	cout <<"End of Range Search"<<std::endl;
 }
 
 

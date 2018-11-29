@@ -52,7 +52,6 @@ long double Cosine_Similarity(std::vector<double> &A, std::vector<double> &B)
 
 double Find_Distance(std::vector<double>& A, std::vector<double>& B, int& posA, int& posB)
 {
-	// std::cout <<"PosA "<<posA<<" and PosB "<<posB<<std::endl;
 	int min;
 	int max;
 	int position;
@@ -69,29 +68,20 @@ double Find_Distance(std::vector<double>& A, std::vector<double>& B, int& posA, 
 
 	double distance;
 	position = max - min;
-	// std::cout <<"Position "<<position<<" and min= "<<min<<" max= "<<max<<std::endl;
+	
 	if (Distance_Table[min][position] != 0)
 	{
-		// std::cout <<"HERE 1"<<std::endl;
-		// std::cout <<"Taking dist from "<<min<<","<<position-1<<std::endl;
 		distance = Distance_Table[min][position]; 
-		// std::vector<double> tmpV = Distance_Table[min];
-		// distance = tmpV[position-1];
-		// std::cout <<"HERE 2"<<std::endl;
 	}
 	else
 	{
-		// std::cout <<"HERE 3"<<std::endl;
 		if (metric == 1)
 			distance = Euclidean_Distance(A, B);
 		else
-		{
 			distance = Cosine_Similarity(A, B);
-			std::cout <<"Cosine dist "<<distance<<std::endl;
-		}
+
 		Distance_Table[min][position] = distance;
-		// std::cout <<"HERE 4 evala se "<<min<<" ,"<<position-1<<" dist "<<distance<<std::endl;
 	}
-	// std::cout <<"Size "<<Distance_Table[min].size()<<std::endl;
+
 	return distance;
 }

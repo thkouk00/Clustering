@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 #include "../../include/cluster/Cluster.h"
 #include "../../include/cluster/Initialization.h"
 #include "../../include/cluster/Assignment.h"

@@ -11,9 +11,6 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 	std::vector<double> b;
 	string pid;
 
-	// output <<"R-near neighbors:"<<std::endl;
-	cout <<"R-near neighbors:"<<std::endl;
-
 	std::map<std::vector<double>, MapNode>::iterator mapIt;
 
 	int table_counter = 0;
@@ -23,10 +20,9 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 		tmpfi = fi[i];
 		std::vector<int> tmpg(g[i]);
 	
-		cout <<"EDW EIMAI i "<<i<<" me Radius "<<R<<std::endl;
 		if (!(hashTables[i]->bucket_exist(tmpfi)))
 		{
-			cout <<"NO BUCKET "<<table_counter<<std::endl;
+			// cout <<"NO BUCKET "<<table_counter<<std::endl;
 			table_counter++;
 			continue;
 		}
@@ -34,7 +30,7 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 		Buckets* bucket = hashTables[i]->access_bucket(tmpfi);
 		if (bucket == NULL)
 		{
-			cout <<"Table NULL"<<std::endl;
+			// cout <<"Table NULL"<<std::endl;
 			table_counter++;
 			continue;
 		}
@@ -46,12 +42,6 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 			bool g_flag = 1;
 			std::vector<double> p(it->get_p());  
 			
-			//point is centroid
-			// Qit = find(queryset.begin(), queryset.end(), p);
-			// if (Qit != queryset.end())
-			// 	continue;
-
-			// if (Euclidean)
 			if (metric == 1)
 			{
 				// find distance for trueNN_neighbor
@@ -96,9 +86,7 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 									tempNode.set_info(assigned_cluster, second_best, assigned_radius, assigned_dist);
 									assigned_elements[p] = tempNode;
 									// point reassigned
-									// if (Stop)
-										Stop = 0;
-									// cout <<"***CHECKPOINT1"<<std::endl;
+									Stop = 0;
 								}
 							}
 							else if (assigned_radius > R)
@@ -111,9 +99,7 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 								tempNode.set_info(assigned_cluster, second_best, assigned_radius, assigned_dist);
 								assigned_elements[p] = tempNode;
 								// point reassigned
-								// if (Stop)
-									Stop = 0;
-								// cout <<"***CHECKPOINT2"<<std::endl;
+								Stop = 0;
 							}
 						}
 					}
@@ -123,20 +109,12 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 						tempNode.set_info(cluster_pos, temp_sec, R, distance);
 						assigned_elements[p] = tempNode;
 						//new point assigned
-						// if (Stop)
-							Stop = 0;
+						Stop = 0;
 					}
-					// cout <<it->get_id()<<" -> distance "<<distance<<std::endl;
 				}
 			}
 		}
 	}
-	// cout <<"Table counter "<<table_counter<<" and L "<<L<<std::endl;
-	// if (table_counter >= L/2)
-	// {
-	// 	Stop = 0;
-	// }
-	cout <<"STOP FLAG "<<Stop<<std::endl;
 }
 
 

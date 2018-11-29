@@ -63,11 +63,6 @@ void cube_storeDataset(std::vector<std::vector<double>> &dataset, std::vector<st
 	}
 }
 
-// void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements, cube_HashTable* cube, std::vector<std::string> &id, std::vector<std::vector<double>>& queryset, std::map<int,bool>& mymap, int& M, int& probes, int& k, int& w, int& num_of_buckets, double& Radius,bool& Euclidean)
-// {
-
-// }
-
 // void search_neighbors(HashTable *cube,std::vector<std::string> &id,std::vector<std::vector<double>> &queryset,std::map<int,bool> &mymap,int &M, int &probes,int &k,int &w, int &num_of_buckets, double &Radius,bool &Euclidean,std::ofstream &output)
 void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements, HashTable *cube,std::vector<std::string> &id,std::vector<std::vector<double>> &queryset,std::map<int,bool>& coinmap,int &M, int &probes,int &k,int &w, int &num_of_buckets, bool &Euclidean)
 {
@@ -104,11 +99,6 @@ void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elem
 		query = *it; 
 		cube_find_hashFunction(g, query, coinmap, k, w, num_of_buckets, position,Euclidean);
 		int TmpPos = position;
-
-		// output <<std::endl<<"******************************************************************************************************************"<<std::endl;
-		// output <<"Query: "<<*id_iter<<std::endl;
-		cout <<std::endl<<"******************************************************************************************************************"<<std::endl;
-		cout <<"Query: "<<*id_iter<<std::endl;
 		
 		long double dist = 0;
 		string id;
@@ -119,7 +109,6 @@ void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elem
 		if (Rad != 0)
 		{	
 			Radius = Rad;
-			cout <<"Radius "<<Radius<<std::endl;
 			bool Stop_flag = 1;
 			while(1)
 			{
@@ -154,12 +143,6 @@ void cube_search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elem
 		query.clear();
 		g.clear();
 	}
-	// output <<std::endl<<"Final Statistics:"<<std::endl;
-	// output <<"Max fraction: "<<maxfraction<<std::endl;
-	// output <<"Average Time of ApproxSearch: "<<averageApproxtime/(queryset.size())<<std::endl;
-	cout <<std::endl<<"Final Statistics:"<<std::endl;
-	cout <<"Max fraction: "<<maxfraction<<std::endl;
-	cout <<"Average Time of ApproxSearch: "<<averageApproxtime/(queryset.size())<<std::endl;
 }
 
 int cube_find_hashFunction(std::vector<int> &g, std::vector<double> &query, std::map<int,bool> &mymap, int &k, int &w, int &num_of_buckets, int &position, bool Euclidean)

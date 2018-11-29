@@ -163,7 +163,6 @@ int main(int argc, char const *argv[])
 	std::vector<double> tempv;
 
 	string str;                      // This will store your tokens
-	// string line;
 	std::ifstream file(input_file);
 	int counter = 0;
 	while (getline(file, line))
@@ -185,7 +184,7 @@ int main(int argc, char const *argv[])
 		Points.push_back(tempv);
 		tempv.clear();
 	}
-	cout <<"AFTER size "<<Points.size()<<std::endl;
+	
 	bool metric_flag;
 	if (metric == "euclidean")
 		metric_flag = 1;

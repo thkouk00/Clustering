@@ -11,17 +11,17 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 {	
 	bool euclidean_flag = 1;
 
-	std::cout <<endl<< "Number of lines in input file: " << dataset.size()<<std::endl;;
+	// std::cout <<endl<< "Number of lines in input file: " << dataset.size()<<std::endl;;
     
     //number of buckets in each hash Table
     int number_of_buckets;
-    // if (euclidean_flag)
+    // metric = 1 euclidean, metric = 0 cosine
     if (metric == 1)
     	number_of_buckets = dataset.size()/4;
 	else
 		number_of_buckets = pow(2,k);
 
-	cout <<"Queryset lines "<<queryset.size()<<std::endl;
+	// cout <<"Queryset lines "<<queryset.size()<<std::endl;
 	
 	//structure to track assigned points
 	std::map<std::vector<double>, MapNode> assigned_elements;
@@ -29,7 +29,7 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 	search_neighbors(assigned_elements, hashTables, id, queryset, L, k, w, number_of_buckets, euclidean_flag);
 
 
-	cout <<"Points assigned from range "<<assigned_elements.size()<<std::endl;
+	// cout <<"Points assigned from range "<<assigned_elements.size()<<std::endl;
 	std::vector<std::vector<double>>::iterator qit;
 	std::map<std::vector<double>, MapNode>::iterator it;
 	//assign every point to its cluster
@@ -50,8 +50,6 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 			{
 				for (int l=0;l<queryset.size();l++)
 				{
-					// if (queryset[l] == dataset[i])
-					// 	continue;
 					double temp_dist;
 					if (k_means_flag)
 						temp_dist = Find_Distance(queryset[l], dataset[i],Cluster_position[l],i);
@@ -75,15 +73,9 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 			cluster[c_pos]->InsertPoint(info);
 			if (k_means_flag)
 				map[dataset[i]] = queryset[c_pos];
-			// cout <<"****WAS HERE****"<<std::endl;
-			// continue;
 		}
 		else
 		{
-			//check if point is centroid
-			// qit = find(queryset.begin(), queryset.end(), dataset[i]);
-			// if (qit != queryset.end())
-			// 	continue;
 			double tmp_dist;
 			double min_distance;
 			int position;
@@ -127,11 +119,6 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 				map[dataset[i]] = queryset[position];
 		}
 	}
-
-
-	// for (int i=0;i<L;i++)
-	// 	delete hashTables[i];
-	// delete[] hashTables;
 }
 
 //function overload

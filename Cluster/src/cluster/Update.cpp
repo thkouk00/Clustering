@@ -34,8 +34,8 @@ std::vector<double> add_vectors(std::vector<double>& A, std::vector<double>& B)
 double calculate_objectiveFunc(std::vector<double>& pointA, std::vector<Info>& Array, int& pointA_position)
 {
 	long double value = 0;
-	if (Array.size() == 0)
-		cout <<"Empty Cluster"<<std::endl;
+	// if (Array.size() == 0)
+	// 	cout <<"Empty Cluster"<<std::endl;
 	for (int j=0;j<Array.size();j++)
 	{
 		std::vector<double> pointB = Array[j].get_point();
@@ -43,8 +43,6 @@ double calculate_objectiveFunc(std::vector<double>& pointA, std::vector<Info>& A
 			continue;
 		int pointB_position = Array[j].get_Pos_Id();
 		// value += Euclidean_Distance(pointA, pointB);
-		if (pointA_position == pointB_position)
-			cout <<"CALCULATE OBJ SAME POSITIONS "<<std::endl;
 		value += Find_Distance(pointA, pointB, pointA_position, pointB_position);
 	}
 
@@ -75,7 +73,7 @@ void PAM_improved(Cluster **cluster, std::vector<std::vector<double>>& Points, s
 				continue;
 			int point_position = Array[j].get_Pos_Id();
 			double tmp_objFunc_val = calculate_objectiveFunc(point, Array, point_position);
-			// tmp_objFunc_val += Euclidean_Distance(point, current_centroid);
+	
 			if (j == 0)
 			{
 				min_objValue = tmp_objFunc_val;
@@ -87,22 +85,16 @@ void PAM_improved(Cluster **cluster, std::vector<std::vector<double>>& Points, s
 				new_centroid = j;
 			}
 		}
-		cout <<"Old objVal "<<old_objValue<<std::endl;
-		cout <<"New objVal "<<min_objValue<<std::endl;
 		if (min_objValue < old_objValue && min_objValue != -1)
 		{
 			Cluster_Table[i] = Array[new_centroid].get_point();
 			Cluster_position[i] = Array[new_centroid].get_Pos_Id();
 			changes++;
-		}
-		
+		}	
 	}
-	cout <<"****CHANGES "<<changes<<" ****"<<std::endl;
+
 	if (changes == 0 )//|| ((changes*100)/Cluster_Table.size()) <= 15) //|| (((changes*100)/Cluster_Table.size()) <= 10 && Cluster_Table.size() >= 50))
-	{
-		cout <<"POSOSTO "<<(changes*100)/(double)Cluster_Table.size()<<std::endl;
 		flag = 0;
-	}
 	
 }
 
@@ -114,7 +106,7 @@ void k_means(Cluster **cluster, std::vector<std::vector<double>>& Points, std::v
 		//initialize result vector with zeros
 		std::vector<double> result(Points[0].size());
 		std::vector<Info> info_array = cluster[i]->get_array();
-		// info_array = cluster[i]->get_array();
+		
 		// get every point in cluster
 		if (info_array.size() == 0)
 			continue;
