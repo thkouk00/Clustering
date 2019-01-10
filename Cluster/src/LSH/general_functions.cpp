@@ -90,7 +90,7 @@ void search_neighbors(std::map<std::vector<double>, MapNode>& assigned_elements,
 			if (metric == 1)
 				dist = Euclidean_Distance(queryset[i], queryset[j]);
 			else
-				dist = Cosine_Similarity(queryset[i], queryset[j]);
+				dist = 1 - Cosine_Similarity(queryset[i], queryset[j]);
 
 			if (min_dist > dist)
 				min_dist = dist;

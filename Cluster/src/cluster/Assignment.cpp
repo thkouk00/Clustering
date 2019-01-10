@@ -31,7 +31,7 @@ void Lloyds_Assignment(std::map<std::vector<double>, std::vector<double>>& map, 
 				if (metric == 1)
 					dist = Euclidean_Distance(Points[i], Cluster_Table[j]);
 				else
-					dist = Cosine_Similarity(Points[i], Cluster_Table[j]);
+					dist = 1 - Cosine_Similarity(Points[i], Cluster_Table[j]);
 			}
 			
 			if (j == 0)

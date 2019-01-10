@@ -55,7 +55,7 @@ void Range_search(std::map<std::vector<double>, MapNode>& assigned_elements, Has
 			}
 			else
 			{
-				distance = Cosine_Similarity(query,p);
+				distance = 1 - Cosine_Similarity(query,p);
 				g_flag = 1;
 			}
 			
@@ -163,7 +163,7 @@ void Range_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std:
 			}
 			else
 			{
-				distance = Cosine_Similarity(query,p);
+				distance = 1 - Cosine_Similarity(query,p);
 				g_flag = 1;
 			}
 

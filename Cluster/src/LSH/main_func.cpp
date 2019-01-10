@@ -58,7 +58,7 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 						if (metric == 1)
 							temp_dist = Euclidean_Distance(queryset[l], dataset[i]);
 						else
-							temp_dist = Cosine_Similarity(queryset[l], dataset[i]);
+							temp_dist = 1 - Cosine_Similarity(queryset[l], dataset[i]);
 					}	
 					
 					if (sec_best_dist > temp_dist && temp_dist > Dist)
@@ -87,7 +87,7 @@ void Search_Neighbors(std::map<std::vector<double>, std::vector<double>>& map, H
 				if (metric == 1)
 					tmp_dist = Euclidean_Distance(dataset[i], queryset[j]);
 				else
-					tmp_dist = Cosine_Similarity(dataset[i], queryset[j]);
+					tmp_dist = 1 - Cosine_Similarity(dataset[i], queryset[j]);
 				
 				if (j == 0)
 				{

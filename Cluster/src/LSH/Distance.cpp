@@ -34,7 +34,7 @@ long double Cosine_Similarity(std::vector<double> &A, std::vector<double> &B)
 		//throw std::logic_error("Vector A and Vector B are empty");
 	}
 
-	in_product = std::inner_product(A.begin(), A.end(), B.begin(), 0);
+	in_product = std::inner_product(A.begin(), A.end(), B.begin(), 0.0);
 	for(std::vector<double>::iterator A_iter = A.begin(), B_iter=B.begin(); A_iter != A.end(); A_iter++ , B_iter++ )
 	{
 		// mul += *A_iter * *B_iter;
@@ -78,7 +78,7 @@ double Find_Distance(std::vector<double>& A, std::vector<double>& B, int& posA, 
 		if (metric == 1)
 			distance = Euclidean_Distance(A, B);
 		else
-			distance = Cosine_Similarity(A, B);
+			distance = 1 - Cosine_Similarity(A, B);
 
 		Distance_Table[min][position] = distance;
 	}

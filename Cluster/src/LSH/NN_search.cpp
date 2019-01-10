@@ -40,7 +40,7 @@ void NN_search(HashTable **hashTables, std::vector<std::vector<int>> &g, std::ve
 				distance = Euclidean_Distance(query,p);
 			}
 			else
-				distance = Cosine_Similarity(query,p);
+				distance = 1 - Cosine_Similarity(query,p);
 			
 			if (distance < db)
 			{
